@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.sharp.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,6 +68,24 @@ fun SignUpScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
+
+    var isEmailError by remember { mutableStateOf("") }
+    var isPasswordError by remember { mutableStateOf("") }
+
+    // 이메일 및 비밀번호 검증 함수
+    fun validateInputs() {
+        isEmailError = if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            "유효한 이메일 형식이 아닙니다."
+        } else {
+            ""
+        }
+
+        isPasswordError = if (!isValidPassword(password)) {
+            "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다."
+        } else {
+            ""
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -134,7 +151,10 @@ fun SignUpScreen() {
                 //이메일
                 TextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {
+                        email = it
+                        validateInputs() //검증
+                    },
                     placeholder = { Text("wavve@example.com") },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email
@@ -145,13 +165,18 @@ fun SignUpScreen() {
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = Color(0xFF2F2F2F),
                         focusedContainerColor = Color(0xFF2F2F2F),
+                        errorContainerColor = Color(0xFF2F2F2F),
                         cursorColor = Color.Gray,
+                        errorCursorColor = Color.Gray,
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.Gray,
+                        errorTextColor = Color.Red,
                         unfocusedPlaceholderColor = Color.Gray,
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
                     ),
+                    isError = if (isEmailError.isNotEmpty()) true else false,
                     shape = RoundedCornerShape(5.dp),
                 )
 
@@ -174,11 +199,14 @@ fun SignUpScreen() {
                 //비밀번호
                 TextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                        validateInputs() //검증
+                    },
                     placeholder = { Text("Wavve 비밀번호 설정") },
                     suffix = {
                         Text(
-                            "show",
+                            if(showPassword.value) "hide" else "show",
                             color = Color.White,
                             modifier = Modifier.clickable {
                                 showPassword.value = !showPassword.value
@@ -194,13 +222,18 @@ fun SignUpScreen() {
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = Color(0xFF2F2F2F),
                         focusedContainerColor = Color(0xFF2F2F2F),
+                        errorContainerColor = Color(0xFF2F2F2F),
                         cursorColor = Color.Gray,
+                        errorCursorColor = Color.Gray,
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.Gray,
+                        errorTextColor = Color.Red,
                         unfocusedPlaceholderColor = Color.Gray,
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        errorIndicatorColor = Color.Transparent,
                     ),
+                    isError = if (isPasswordError.isNotEmpty()) true else false,
                     shape = RoundedCornerShape(5.dp),
                 )
 
@@ -234,7 +267,10 @@ fun SignUpScreen() {
                         .fillMaxWidth()
                         .background(color = Color(0xFF717171))
                         .clickable {
-                            //버튼
+                            validateInputs() //검증
+                            if(isEmailError.isEmpty() && isPasswordError.isEmpty()) {
+                                //LoginActivity로 넘어가기
+                            }
                         },
                 ) {
                     Text(
@@ -319,9 +355,9 @@ private fun SocialLoginButton() {
 
     Spacer(modifier = Modifier.height(30.dp))
 
-    Row (
+    Row(
         modifier = Modifier.padding(horizontal = 20.dp)
-    ){
+    ) {
         Text(
             "ㆍ",
             fontSize = 12.sp,
@@ -333,4 +369,18 @@ private fun SocialLoginButton() {
             color = Color.Gray,
         )
     }
+}
+
+// 비밀번호 검증 함수
+fun isValidPassword(password: String): Boolean {
+    if (password.length < 8 || password.length > 20) return false
+
+    val hasUpperCase = password.any { it.isUpperCase() }
+    val hasLowerCase = password.any { it.isLowerCase() }
+    val hasDigit = password.any { it.isDigit() }
+    val hasSpecialChar = password.any { "!@#$%^&*()-_=+<>?/{}[]~".contains(it) }
+
+    val complexityCount = listOf(hasUpperCase, hasLowerCase, hasDigit, hasSpecialChar).count { it }
+
+    return complexityCount >= 3
 }
