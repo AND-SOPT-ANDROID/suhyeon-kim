@@ -1,5 +1,6 @@
 package org.sopt.and
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,10 +40,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,6 +53,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 class LoginActivity : ComponentActivity() {
@@ -63,12 +69,19 @@ class LoginActivity : ComponentActivity() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun LoginScreen() {
+    val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
+
+    val isLoginSuccess = remember { mutableStateOf(true) }
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -144,7 +157,7 @@ fun LoginScreen() {
                     placeholder = { Text("비밀번호") },
                     suffix = {
                         Text(
-                            "show",
+                            if (showPassword.value) "hide" else "show",
                             color = Color.White,
                             modifier = Modifier.clickable {
                                 showPassword.value = !showPassword.value
@@ -172,7 +185,37 @@ fun LoginScreen() {
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //기본 로그인 버튼
-                CustomLoginButton()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .background(
+                            color = Color(0xFF1353FA),
+                            shape = RoundedCornerShape(size = 50.dp)
+                        )
+                        .padding(vertical = 12.dp)
+                        .clickable {
+                            if(isLoginSuccess.value) {
+                                //로그인 성공
+                                Intent(context, MyActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(this)
+                                }
+                            } else {
+                                //로그인 실패
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("로그인에 실패했습니다.")
+                                }
+                            }
+
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "로그인",
+                        color = Color.White
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -216,31 +259,13 @@ fun LoginScreen() {
                 //소셜 로그인 버튼
                 SocialLoginButton()
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
 
-    }
-}
-
-@Composable
-private fun CustomLoginButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(
-                color = Color(0xFF1353FA),
-                shape = RoundedCornerShape(size = 50.dp)
-            )
-            .padding(vertical = 12.dp)
-            .clickable {
-                //navigate
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "로그인",
-            color = Color.White
-        )
     }
 }
 
