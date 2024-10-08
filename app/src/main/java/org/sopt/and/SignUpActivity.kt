@@ -1,5 +1,6 @@
 package org.sopt.and
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +23,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.sharp.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -33,20 +35,25 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 class SignUpActivity : ComponentActivity() {
@@ -65,12 +72,16 @@ class SignUpActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreen() {
+    val context = LocalContext.current
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
 
     var isEmailError by remember { mutableStateOf("") }
     var isPasswordError by remember { mutableStateOf("") }
+
+    val showDialog = remember { mutableStateOf(false) }
 
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs() {
@@ -206,7 +217,7 @@ fun SignUpScreen() {
                     placeholder = { Text("Wavve 비밀번호 설정") },
                     suffix = {
                         Text(
-                            if(showPassword.value) "hide" else "show",
+                            if (showPassword.value) "hide" else "show",
                             color = Color.White,
                             modifier = Modifier.clickable {
                                 showPassword.value = !showPassword.value
@@ -268,8 +279,18 @@ fun SignUpScreen() {
                         .background(color = Color(0xFF717171))
                         .clickable {
                             validateInputs() //검증
-                            if(isEmailError.isEmpty() && isPasswordError.isEmpty()) {
+                            if (isEmailError.isEmpty() && isPasswordError.isEmpty()) {
+                                //검증 성공
+                                showDialog.value = false
+
                                 //LoginActivity로 넘어가기
+                                Intent(context, LoginActivity::class.java).apply {
+                                    // flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(this)
+                                }
+                            } else {
+                                //검증 실패
+                                showDialog.value = true
                             }
                         },
                 ) {
@@ -281,11 +302,59 @@ fun SignUpScreen() {
                         color = Color.White,
                         fontSize = 18.sp,
                     )
+
+                    if (showDialog.value) {
+                        ShowErrorDialog(showDialog, isEmailError, isPasswordError)
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+private fun ShowErrorDialog(
+    showDialog: MutableState<Boolean>,
+    isEmailError: String,
+    isPasswordError: String
+) {
+    Dialog(
+        onDismissRequest = { showDialog.value = false }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Center,
+                color = Color.Black,
+                text = when {
+                    isEmailError.isNotEmpty() && isPasswordError.isNotEmpty() -> "$isEmailError\n$isPasswordError"
+                    isEmailError.isNotEmpty() -> isEmailError
+                    isPasswordError.isNotEmpty() -> isPasswordError
+                    else -> ""
+                }
+            )
+            Spacer(modifier = Modifier.height(36.dp))
+            Button(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                onClick = { showDialog.value = false },
+                enabled = true
+            ) {
+                Text("확인", color = Color.White)
+            }
+            Spacer(modifier = Modifier.height(14.dp))
+        }
+    }
+}
+
 
 @Composable
 private fun SocialLoginButton() {
@@ -371,7 +440,7 @@ private fun SocialLoginButton() {
     }
 }
 
-// 비밀번호 검증 함수
+//비밀번호 검증 함수
 fun isValidPassword(password: String): Boolean {
     if (password.length < 8 || password.length > 20) return false
 
