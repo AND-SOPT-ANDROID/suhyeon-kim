@@ -69,7 +69,7 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun SignUpScreen() {
     val context = LocalContext.current
@@ -285,9 +285,10 @@ fun SignUpScreen() {
 
                                 //LoginActivity로 넘어가기
                                 Intent(context, LoginActivity::class.java).apply {
-                                    // flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(this)
                                 }
+
                             } else {
                                 //검증 실패
                                 showDialog.value = true
