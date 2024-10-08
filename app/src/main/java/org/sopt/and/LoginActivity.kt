@@ -2,6 +2,7 @@ package org.sopt.and
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -58,11 +59,15 @@ import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val localEmail = intent.getStringExtra("email") ?: "123"
+        val localPassword = intent.getStringExtra("password") ?: "123"
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ANDANDROIDTheme {
-                LoginScreen()
+                LoginScreen(localEmail, localPassword)
+                Log.d("localdataResult", "$localEmail, $localPassword")
             }
         }
     }
@@ -71,14 +76,12 @@ class LoginActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(localEmail: String, localPassword: String) {
     val context = LocalContext.current
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
-
-    val isLoginSuccess = remember { mutableStateOf(true) }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -195,9 +198,10 @@ fun LoginScreen() {
                         )
                         .padding(vertical = 12.dp)
                         .clickable {
-                            if(isLoginSuccess.value) {
+                            if (email == localEmail && password == localPassword) {
                                 //로그인 성공
                                 Intent(context, MyActivity::class.java).apply {
+                                    putExtra("email", email)
                                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(this)
                                 }

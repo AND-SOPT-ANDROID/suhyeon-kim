@@ -45,19 +45,21 @@ import org.sopt.and.ui.theme.ANDANDROIDTheme
 
 class MyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val localEmail = intent.getStringExtra("email") ?: "프로필1님"
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ANDANDROIDTheme {
-                MyScreen()
+                MyScreen(localEmail)
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun MyScreen() {
+fun MyScreen(localEmail: String) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     //화면 진입 시 snackBar 표시
@@ -97,7 +99,7 @@ fun MyScreen() {
                             )
 
                             Text(
-                                "프로필1님",
+                                localEmail,
                                 color = Color.White,
                                 modifier = Modifier.padding(start = 10.dp)
                             )

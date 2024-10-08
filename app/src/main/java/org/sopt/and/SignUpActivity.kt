@@ -1,7 +1,9 @@
 package org.sopt.and
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -283,9 +285,14 @@ fun SignUpScreen() {
                                 //검증 성공
                                 showDialog.value = false
 
-                                //LoginActivity로 넘어가기
+                                Log.d("localdata", "$email, $password")
+
+                                //회원가입 정보 저장, LoginActivity로 넘어가기
                                 Intent(context, LoginActivity::class.java).apply {
+                                    putExtra("email", email)
+                                    putExtra("password", password)
                                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    (context as SignUpActivity).setResult(RESULT_OK, this)
                                     context.startActivity(this)
                                 }
 
