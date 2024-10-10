@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -191,6 +192,8 @@ fun SignUpScreen() {
                     ),
                     isError = if (isEmailError.isNotEmpty()) true else false,
                     shape = RoundedCornerShape(5.dp),
+                    maxLines = 1,
+                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -248,6 +251,8 @@ fun SignUpScreen() {
                     ),
                     isError = if (isPasswordError.isNotEmpty()) true else false,
                     shape = RoundedCornerShape(5.dp),
+                    maxLines = 1,
+                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -279,7 +284,11 @@ fun SignUpScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = Color(0xFF717171))
-                        .clickable {
+                        .clickable (
+                            //ripple 효과 제거
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ){
                             validateInputs() //검증
                             if (isEmailError.isEmpty() && isPasswordError.isEmpty()) {
                                 //검증 성공

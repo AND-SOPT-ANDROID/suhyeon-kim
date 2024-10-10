@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -47,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -78,6 +83,7 @@ class LoginActivity : ComponentActivity() {
 @Composable
 fun LoginScreen(localEmail: String, localPassword: String) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -149,6 +155,8 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                         unfocusedIndicatorColor = Color.Transparent
                     ),
                     shape = RoundedCornerShape(5.dp),
+                    maxLines = 1,
+                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -183,38 +191,40 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                         unfocusedIndicatorColor = Color.Transparent
                     ),
                     shape = RoundedCornerShape(5.dp),
+                    maxLines = 1,
+                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //기본 로그인 버튼
-                Box(
+                Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
-                        .background(
-                            color = Color(0xFF1353FA),
-                            shape = RoundedCornerShape(size = 50.dp)
-                        )
-                        .padding(vertical = 12.dp)
-                        .clickable {
-                            if (email == localEmail && password == localPassword) {
-                                //로그인 성공
-                                Intent(context, MyActivity::class.java).apply {
-                                    putExtra("email", email)
-                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(this)
-                                }
-                            } else {
-                                //로그인 실패
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("로그인에 실패했습니다.")
-                                }
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1353FA)
+                    ),
+                    shape = RoundedCornerShape(size = 50.dp),
+                    onClick = {
+                        if (email == localEmail && password == localPassword) {
+                            //로그인 성공
+                            Intent(context, MyActivity::class.java).apply {
+                                putExtra("email", email)
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                context.startActivity(this)
                             }
+                        } else {
+                            //로그인 실패
+                            scope.launch {
+                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
+                            }
+                        }
 
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
+                        //키보드 내리기
+                        keyboardController?.hide()
+                    },
+                    ) {
                     Text(
                         text = "로그인",
                         color = Color.White
