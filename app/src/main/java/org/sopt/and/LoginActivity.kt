@@ -210,7 +210,13 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1353FA)
+                        containerColor = Color(0xFF1353FA),
+                        contentColor = Color(0xFF1353FA),
+                    ),
+                    elevation = ButtonDefaults.elevatedButtonElevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        disabledElevation = 0.dp
                     ),
                     shape = RoundedCornerShape(size = 50.dp),
                     onClick = {
