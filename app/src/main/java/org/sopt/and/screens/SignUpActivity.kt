@@ -1,13 +1,13 @@
-package org.sopt.and
+package org.sopt.and.screens
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,13 +29,10 @@ import androidx.compose.material.icons.sharp.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -48,16 +45,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import org.sopt.and.R
+import org.sopt.and.component.AuthTextField
+import org.sopt.and.component.SocialLoginButtonGroup
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
+import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
+import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +75,6 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview(showBackground = true)
 @Composable
 fun SignUpScreen() {
     val context = LocalContext.current
@@ -88,7 +90,7 @@ fun SignUpScreen() {
 
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs() {
-        isEmailError = if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        isEmailError = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             "유효한 이메일 형식이 아닙니다."
         } else {
             ""
@@ -104,28 +106,36 @@ fun SignUpScreen() {
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("회원가입", fontSize = 18.sp, color = Color.White) },
+                title = {
+                    Text(
+                        stringResource(R.string.SignUp),
+                        fontSize = 18.sp,
+                        color = Color.White
+                    )
+                },
                 actions = {
                     IconButton(onClick = {
                         //뒤로가기
+                        (context as? Activity)?.finish()
+
                     }) {
                         Icon(
                             Icons.Sharp.Close,
-                            contentDescription = "close",
+                            contentDescription = stringResource(R.string.Back),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(40.dp)
                         )
                     }
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(0xFF1B1B1B))
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = WavveTheme.colors.BackgroundGray)
             )
         }
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF1B1B1B))
+                .background(color = WavveTheme.colors.BackgroundGray)
                 .padding(innerPadding)
         ) {
             Column(
@@ -163,37 +173,20 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 //이메일
-                TextField(
+                AuthTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                     value = email,
                     onValueChange = {
                         email = it
                         validateInputs() //검증
                     },
-                    placeholder = { Text("wavve@example.com") },
+                    placeholder = stringResource(R.string.PlaceholderEmail),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email
                     ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFF2F2F2F),
-                        focusedContainerColor = Color(0xFF2F2F2F),
-                        errorContainerColor = Color(0xFF2F2F2F),
-                        cursorColor = Color.Gray,
-                        errorCursorColor = Color.Gray,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.Gray,
-                        errorTextColor = Color.Red,
-                        unfocusedPlaceholderColor = Color.Gray,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        errorIndicatorColor = Color.Transparent,
-                    ),
                     isError = if (isEmailError.isNotEmpty()) true else false,
-                    shape = RoundedCornerShape(5.dp),
-                    maxLines = 1,
-                    singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -204,25 +197,30 @@ fun SignUpScreen() {
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = "tooltip",
+                        contentDescription = stringResource(R.string.Info),
                         tint = Color.Gray,
                     )
-                    Text("로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해주세요.", color = Color.Gray)
+                    Text(stringResource(R.string.EmailHelperText), color = Color.Gray)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 //비밀번호
-                TextField(
+                AuthTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
                     value = password,
                     onValueChange = {
                         password = it
                         validateInputs() //검증
                     },
-                    placeholder = { Text("Wavve 비밀번호 설정") },
+                    placeholder = stringResource(R.string.PlaceholderPassword),
                     suffix = {
                         Text(
-                            if (showPassword.value) "hide" else "show",
+                            if (showPassword.value) stringResource(R.string.Hide) else stringResource(
+                                R.string.Show
+                            ),
                             color = Color.White,
                             modifier = Modifier.clickable {
                                 showPassword.value = !showPassword.value
@@ -232,27 +230,7 @@ fun SignUpScreen() {
                         keyboardType = KeyboardType.Password
                     ),
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(0xFF2F2F2F),
-                        focusedContainerColor = Color(0xFF2F2F2F),
-                        errorContainerColor = Color(0xFF2F2F2F),
-                        cursorColor = Color.Gray,
-                        errorCursorColor = Color.Gray,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.Gray,
-                        errorTextColor = Color.Red,
-                        unfocusedPlaceholderColor = Color.Gray,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        errorIndicatorColor = Color.Transparent,
-                    ),
-                    isError = if (isPasswordError.isNotEmpty()) true else false,
-                    shape = RoundedCornerShape(5.dp),
-                    maxLines = 1,
-                    singleLine = true
+                    isError = if (isPasswordError.isNotEmpty()) true else false
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -263,11 +241,11 @@ fun SignUpScreen() {
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = "tooltip",
+                        contentDescription = stringResource(R.string.Info),
                         tint = Color.Gray,
                     )
                     Text(
-                        "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.",
+                        stringResource(R.string.PasswordHelperText),
                         color = Color.Gray
                     )
                 }
@@ -275,7 +253,7 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 //소셜 로그인
-                SocialLoginButton()
+                SocialLoginButtonGroup(stringResource(R.string.SocialSignUp))
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -283,18 +261,16 @@ fun SignUpScreen() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color(0xFF717171))
-                        .clickable (
+                        .background(color = WavveTheme.colors.Gray71)
+                        .clickable(
                             //ripple 효과 제거
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ){
+                        ) {
                             validateInputs() //검증
                             if (isEmailError.isEmpty() && isPasswordError.isEmpty()) {
                                 //검증 성공
                                 showDialog.value = false
-
-                                Log.d("localdata", "$email, $password")
 
                                 //회원가입 정보 저장, LoginActivity로 넘어가기
                                 Intent(context, LoginActivity::class.java).apply {
@@ -312,7 +288,7 @@ fun SignUpScreen() {
                         },
                 ) {
                     Text(
-                        "Wavve 회원가입",
+                        stringResource(R.string.WavveSignUp),
                         modifier = Modifier
                             .padding(vertical = 18.dp)
                             .align(Alignment.Center),
@@ -365,106 +341,21 @@ private fun ShowErrorDialog(
                 onClick = { showDialog.value = false },
                 enabled = true
             ) {
-                Text("확인", color = Color.White)
+                Text(stringResource(R.string.OK), color = Color.White)
             }
             Spacer(modifier = Modifier.height(14.dp))
         }
     }
 }
 
-
-@Composable
-private fun SocialLoginButton() {
-    //구분선
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 20.dp, end = 10.dp),
-            color = Color.DarkGray
-        )
-        Text("또는 다른 서비스 계정으로 가입", color = Color.Gray)
-
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 10.dp, end = 20.dp),
-            color = Color.DarkGray
-        )
-    }
-
-    Spacer(modifier = Modifier.height(30.dp))
-
-    //소셜 로그인 버튼
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_facebook),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_facebook),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_apple),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_facebook),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_apple),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(50.dp)
-            )
-        }
-    }
-
-    Spacer(modifier = Modifier.height(30.dp))
-
-    Row(
-        modifier = Modifier.padding(horizontal = 20.dp)
-    ) {
-        Text(
-            "ㆍ",
-            fontSize = 12.sp,
-            color = Color.Gray,
-        )
-        Text(
-            "SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다. 기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요",
-            fontSize = 12.sp,
-            color = Color.Gray,
-        )
-    }
-}
-
 //비밀번호 검증 함수
 fun isValidPassword(password: String): Boolean {
-    if (password.length < 8 || password.length > 20) return false
+    if (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH) return false
 
     val hasUpperCase = password.any { it.isUpperCase() }
     val hasLowerCase = password.any { it.isLowerCase() }
     val hasDigit = password.any { it.isDigit() }
-    val hasSpecialChar = password.any { "!@#$%^&*()-_=+<>?/{}[]~".contains(it) }
+    val hasSpecialChar = password.any { PASSWORD_PATTERN.contains(it) }
 
     val complexityCount = listOf(hasUpperCase, hasLowerCase, hasDigit, hasSpecialChar).count { it }
 

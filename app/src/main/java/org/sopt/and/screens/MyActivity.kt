@@ -1,4 +1,4 @@
-package org.sopt.and
+package org.sopt.and.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
@@ -36,16 +35,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import org.sopt.and.R
+import org.sopt.and.component.EmptyBox
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.AuthKey.EMAIL
 
 class MyActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val localEmail = intent.getStringExtra("email") ?: "프로필1님"
+        val localEmail = intent.getStringExtra(EMAIL) ?: "프로필1님"
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -57,7 +57,6 @@ class MyActivity : ComponentActivity() {
     }
 }
 
-//@Preview(showBackground = true)
 @Composable
 fun MyScreen(localEmail: String) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -71,18 +70,15 @@ fun MyScreen(localEmail: String) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF1B1B1B))
+                .background(color = WavveTheme.colors.BackgroundGray)
                 .padding(innerPadding)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+            Column {
                 //프로필 박스
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color(0xFF252525))
+                        .background(color = WavveTheme.colors.Gray25)
                         .padding(vertical = 20.dp)
                 ) {
                     Column {
@@ -92,7 +88,7 @@ fun MyScreen(localEmail: String) {
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_launcher_background),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.Profile),
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .size(50.dp)
@@ -108,21 +104,19 @@ fun MyScreen(localEmail: String) {
 
                             IconButton(
                                 onClick = {
-                                    //알림
                                 }) {
                                 Icon(
                                     Icons.Outlined.Notifications,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.Notifications),
                                     tint = Color.White
                                 )
                             }
                             IconButton(
                                 onClick = {
-                                    //세팅
                                 }) {
                                 Icon(
                                     Icons.Outlined.Settings,
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.Settings),
                                     tint = Color.White
                                 )
                             }
@@ -131,7 +125,7 @@ fun MyScreen(localEmail: String) {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         Text(
-                            "첫 결제 시 첫 달 100원!",
+                            stringResource(R.string.FirstBuyBenefit),
                             color = Color.Gray,
                             modifier = Modifier.padding(start = 20.dp)
                         )
@@ -139,10 +133,10 @@ fun MyScreen(localEmail: String) {
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(start = 20.dp)
                         ) {
-                            Text("구매하기", color = Color.White)
+                            Text(stringResource(R.string.Buy), color = Color.White)
                             Icon(
                                 Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.Buy),
                                 tint = Color.White
                             )
                         }
@@ -155,12 +149,12 @@ fun MyScreen(localEmail: String) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color(0xFF252525))
+                        .background(color = WavveTheme.colors.Gray25)
                         .padding(top = 5.dp, bottom = 15.dp)
                 ) {
                     Column {
                         Text(
-                            "현재 보유하신 이용권이 없습니다.",
+                            stringResource(R.string.NoTicket),
                             color = Color.Gray,
                             modifier = Modifier.padding(start = 20.dp)
                         )
@@ -168,10 +162,10 @@ fun MyScreen(localEmail: String) {
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(start = 20.dp)
                         ) {
-                            Text("구매하기", color = Color.White)
+                            Text(stringResource(R.string.Buy), color = Color.White)
                             Icon(
                                 Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.Buy),
                                 tint = Color.White
                             )
                         }
@@ -181,67 +175,18 @@ fun MyScreen(localEmail: String) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 //전체 시청 내역
-                Text(
-                    "전체 시청내역",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 20.dp)
-                )
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                Icon(
-                    Icons.Outlined.Info,
-                    contentDescription = null,
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .size(100.dp)
-                )
-                Text(
-                    "시청내역이 없어요.",
-                    color = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 10.dp),
-                    textAlign = TextAlign.Center
+                EmptyBox(
+                    stringResource(R.string.ViewingHistory),
+                    stringResource(R.string.NoViewingHistory)
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //관심 프로그램
-                Text(
-                    "관심 프로그램",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(start = 20.dp)
+                EmptyBox(
+                    stringResource(R.string.InterestedProgram),
+                    stringResource(R.string.NoInterestedProgram)
                 )
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-                Icon(
-                    Icons.Outlined.Info,
-                    contentDescription = null,
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .size(100.dp)
-                )
-                Text(
-                    "관심 프로그램이 없어요.",
-                    color = Color.Gray,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 10.dp),
-                    textAlign = TextAlign.Center
-                )
-
             }
 
             SnackbarHost(

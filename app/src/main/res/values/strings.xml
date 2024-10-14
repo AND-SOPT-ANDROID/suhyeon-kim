@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">AND-ANDROID</string>
+
+    <string name="Back">뒤로가기</string>
+    <string name="Wavve_logo">wavve 로고</string>
+    <string name="EmailOrID">이메일 주소 또는 아이디</string>
+    <string name="Login">로그인</string>
+    <string name="Password">비밀번호</string>
+    <string name="Hide">hide</string>
+    <string name="Show">show</string>
+    <string name="FindID">아이디 찾기</string>
+    <string name="ResetPassword">비밀번호 재설정</string>
+    <string name="SignUp">회원가입</string>
+    <string name="SocialLogin">또는 다른 서비스 계정으로 로그인</string>
+    <string name="SocialLoginDescription">SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요</string>
+
+    <string name="Profile">프로필</string>
+    <string name="Notifications">알림</string>
+    <string name="Settings">설정</string>
+    <string name="FirstBuyBenefit">첫 결제 시 첫 달 100원!</string>
+    <string name="Buy">구매하기</string>
+    <string name="NoTicket">현재 보유하신 이용권이 없습니다.</string>
+    <string name="ViewingHistory">전체 시청내역</string>
+    <string name="NoViewingHistory">시청내역이 없어요.</string>
+    <string name="InterestedProgram">관심 프로그램</string>
+    <string name="NoInterestedProgram">관심 프로그램이 없어요.</string>
+
+    <string name="PlaceholderEmail">wavve@example.com</string>
+    <string name="EmailHelperText">로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해주세요.</string>
+    <string name="PlaceholderPassword">Wavve 비밀번호 설정</string>
+    <string name="PasswordHelperText">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.</string>
+    <string name="WavveSignUp">Wavve 회원가입</string>
+    <string name="OK">확인</string>
+    <string name="Info">도움말</string>
+    <string name="SocialSignUp">또는 다른 서비스 계정으로 가입</string>
+
+    <!--    dialog-->
+    <string name="dialog_noValid_email">유효한 이메일 형식이 아닙니다.</string>
+    <string name="dialog_noValid_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다.</string>
+
 </resources>
