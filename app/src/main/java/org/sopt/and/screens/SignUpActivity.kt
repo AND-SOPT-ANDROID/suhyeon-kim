@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -68,7 +67,7 @@ import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
-import org.sopt.and.utils.CustomIndication
+import org.sopt.and.utils.noRippleClickable
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -284,11 +283,7 @@ fun SignUpScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = WavveTheme.colors.Gray71)
-                        .clickable(
-                            //ripple 효과 제거
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = CustomIndication
-                        ) {
+                        .noRippleClickable {
                             validateInputs() //검증
                             if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
                                 //검증 성공
