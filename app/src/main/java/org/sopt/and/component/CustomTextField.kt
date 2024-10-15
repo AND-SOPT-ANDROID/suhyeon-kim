@@ -20,12 +20,12 @@ import java.lang.Error
 
 @Composable
 fun AuthTextField(
-    modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    suffix: @Composable() (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions,
+    modifier: Modifier = Modifier,
+    suffix: @Composable() (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isError: Boolean = false
 ) {
