@@ -249,8 +249,8 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                             fontSize = 12.sp,
                             color = Color.Gray,
                             modifier = Modifier.clickable {
-                                Intent(context, SignUpActivity::class.java).apply {
-                                    context.startActivity(this)
+                                Intent(context, SignUpActivity::class.java).let { intent ->
+                                    context.startActivity(intent)
                                 }
                             }
                         )
