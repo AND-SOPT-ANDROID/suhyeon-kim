@@ -253,7 +253,7 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 //소셜 로그인
-                SocialLoginButtonGroup(stringResource(R.string.SocialSignUp))
+                SocialLoginButtonGroup(stringResource(R.string.SocialSignUp), modifier = Modifier.padding(horizontal = 20.dp))
 
                 Spacer(modifier = Modifier.weight(1f))
 

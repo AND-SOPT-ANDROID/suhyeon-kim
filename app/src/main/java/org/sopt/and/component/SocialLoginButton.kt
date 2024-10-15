@@ -1,8 +1,10 @@
 package org.sopt.and.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,72 +24,73 @@ import androidx.compose.ui.unit.sp
 import org.sopt.and.R
 
 @Composable
-fun SocialLoginButtonGroup(title: String) {
+fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
     //구분선
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 10.dp),
-            color = Color.DarkGray
-        )
-        Text(title, color = Color.Gray)
-
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 10.dp),
-            color = Color.DarkGray
-        )
-    }
-
-    Spacer(modifier = Modifier.height(30.dp))
-
-    //소셜 로그인 버튼
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            SocialLoginButton(painterResource(id = R.drawable.ic_facebook))
+            HorizontalDivider(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 10.dp),
+                color = Color.DarkGray
+            )
+            Text(title, color = Color.Gray)
 
-            SocialLoginButton(painterResource(id = R.drawable.ic_apple))
-
-            SocialLoginButton(painterResource(id = R.drawable.ic_facebook))
-
-            SocialLoginButton(painterResource(id = R.drawable.ic_apple))
-
-            SocialLoginButton(painterResource(id = R.drawable.ic_facebook))
+            HorizontalDivider(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp),
+                color = Color.DarkGray
+            )
         }
-    }
 
-    Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-    Row {
-        Text(
-            "ㆍ",
-            fontSize = 12.sp,
-            color = Color.Gray,
-        )
-        Text(
-            stringResource(R.string.SocialLoginDescription),
-            fontSize = 12.sp,
-            color = Color.Gray,
-        )
+        //소셜 로그인 버튼
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+
+                repeat(5) {
+                    SocialLoginButton(
+                        modifier = Modifier
+                            .size(50.dp), painterId = R.drawable.ic_apple
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Row {
+            Text(
+                "ㆍ",
+                fontSize = 12.sp,
+                color = Color.Gray,
+            )
+            Text(
+                stringResource(R.string.SocialLoginDescription),
+                fontSize = 12.sp,
+                color = Color.Gray,
+            )
+        }
     }
 }
 
 @Composable
-fun SocialLoginButton(painter: Painter) {
+fun SocialLoginButton(modifier: Modifier, @DrawableRes painterId: Int) {
     Image(
-        painter = painter,
+        painter = painterResource(id = painterId),
         contentDescription = null,
-        modifier = Modifier
-            .size(50.dp)
+        modifier = modifier
     )
 }

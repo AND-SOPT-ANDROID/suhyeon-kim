@@ -177,15 +177,15 @@ fun MyScreen(localEmail: String) {
                 //전체 시청 내역
                 EmptyBox(
                     stringResource(R.string.ViewingHistory),
-                    stringResource(R.string.NoViewingHistory)
-                )
+                    stringResource(R.string.NoViewingHistory),
+                    )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //관심 프로그램
                 EmptyBox(
                     stringResource(R.string.InterestedProgram),
-                    stringResource(R.string.NoInterestedProgram)
+                    stringResource(R.string.NoInterestedProgram),
                 )
             }
 

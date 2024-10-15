@@ -1,22 +1,16 @@
 package org.sopt.and.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import org.sopt.and.R
-import org.sopt.and.ui.theme.WavveTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
-import java.lang.Error
+import androidx.compose.ui.unit.dp
+import org.sopt.and.ui.theme.WavveTheme
 
 @Composable
 fun AuthTextField(
@@ -52,7 +46,6 @@ fun AuthTextField(
         ),
         isError = isError,
         shape = RoundedCornerShape(5.dp),
-        maxLines = 1,
         singleLine = true
     )
 }
