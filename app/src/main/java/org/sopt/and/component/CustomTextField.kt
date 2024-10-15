@@ -1,6 +1,7 @@
 package org.sopt.and.component
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -18,10 +19,11 @@ fun AuthTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
     suffix: @Composable() (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    isError: Boolean = false
+    isError: Boolean = false,
 ) {
     TextField(
         value = value,
@@ -29,6 +31,7 @@ fun AuthTextField(
         placeholder = { Text(placeholder) },
         suffix = suffix,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         modifier = modifier,
         colors = TextFieldDefaults.colors(
