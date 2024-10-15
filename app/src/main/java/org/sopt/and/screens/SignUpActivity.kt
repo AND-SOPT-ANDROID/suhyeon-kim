@@ -277,7 +277,7 @@ fun SignUpScreen() {
                                     putExtra("email", email)
                                     putExtra("password", password)
                                     flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    (context as SignUpActivity).setResult(RESULT_OK, this)
+                                    (context as? SignUpActivity).setResult(RESULT_OK, this)
                                     context.startActivity(this)
                                 }
 
