@@ -46,10 +46,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -83,20 +86,20 @@ fun SignUpScreen() {
     var password by remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
 
-    var isEmailError by remember { mutableStateOf("") }
-    var isPasswordError by remember { mutableStateOf("") }
+    var emailErrorMsg by remember { mutableStateOf("") }
+    var passwordErrorMsg by remember { mutableStateOf("") }
 
     val showDialog = remember { mutableStateOf(false) }
 
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs() {
-        isEmailError = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             "유효한 이메일 형식이 아닙니다."
         } else {
             ""
         }
 
-        isPasswordError = if (!isValidPassword(password)) {
+        passwordErrorMsg = if (!isValidPassword(password)) {
             "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다."
         } else {
             ""
@@ -120,7 +123,7 @@ fun SignUpScreen() {
 
                     }) {
                         Icon(
-                            Icons.Sharp.Close,
+                            imageVector = Icons.Sharp.Close,
                             contentDescription = stringResource(R.string.Back),
                             tint = Color.White,
                             modifier = Modifier
@@ -143,32 +146,32 @@ fun SignUpScreen() {
                     .fillMaxSize()
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
-                Row {
-                    Text(
-                        "이메일과 비밀번호",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 20.dp)
-                    )
-                    Text(
-                        "만으로",
-                        fontSize = 20.sp,
-                        color = Color.Gray,
-                    )
-                }
-                Row {
-                    Text(
-                        "Wavve를 즐길 수",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 20.dp)
-                    )
-                    Text(
-                        " 있어요!",
-                        fontSize = 20.sp,
-                        color = Color.Gray,
-                    )
-                }
+
+                Text(
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = Color.White)) {
+                            append("이메일과 비밀번호")
+                        }
+                        withStyle(style = SpanStyle(color = Color.Gray)) {
+                            append("만으로")
+                        }
+                    },
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp)
+                )
+
+                Text(
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = Color.White)) {
+                            append("Wavve를 즐길 수")
+                        }
+                        withStyle(style = SpanStyle(color = Color.Gray)) {
+                            append(" 있어요!")
+                        }
+                    },
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp)
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -186,7 +189,7 @@ fun SignUpScreen() {
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email
                     ),
-                    isError = if (isEmailError.isNotEmpty()) true else false,
+                    isError = if (emailErrorMsg.isNotEmpty()) true else false,
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -230,7 +233,7 @@ fun SignUpScreen() {
                         keyboardType = KeyboardType.Password
                     ),
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = if (isPasswordError.isNotEmpty()) true else false
+                    isError = if (passwordErrorMsg.isNotEmpty()) true else false
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -253,7 +256,10 @@ fun SignUpScreen() {
                 Spacer(modifier = Modifier.height(50.dp))
 
                 //소셜 로그인
-                SocialLoginButtonGroup(stringResource(R.string.SocialSignUp), modifier = Modifier.padding(horizontal = 20.dp))
+                SocialLoginButtonGroup(
+                    stringResource(R.string.SocialSignUp),
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -268,7 +274,7 @@ fun SignUpScreen() {
                             indication = null
                         ) {
                             validateInputs() //검증
-                            if (isEmailError.isEmpty() && isPasswordError.isEmpty()) {
+                            if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
                                 //검증 성공
                                 showDialog.value = false
 
@@ -276,8 +282,9 @@ fun SignUpScreen() {
                                 Intent(context, LoginActivity::class.java).apply {
                                     putExtra("email", email)
                                     putExtra("password", password)
-                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    (context as? SignUpActivity).setResult(RESULT_OK, this)
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    (context as? SignUpActivity)?.setResult(RESULT_OK, this)
                                     context.startActivity(this)
                                 }
 
@@ -297,7 +304,7 @@ fun SignUpScreen() {
                     )
 
                     if (showDialog.value) {
-                        ShowErrorDialog(showDialog, isEmailError, isPasswordError)
+                        ShowErrorDialog(showDialog, emailErrorMsg, passwordErrorMsg)
                     }
                 }
             }
