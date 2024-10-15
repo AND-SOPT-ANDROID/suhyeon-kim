@@ -1,11 +1,6 @@
-package org.sopt.and.screens
+package org.sopt.and.screens.login
 
 import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -57,35 +52,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
+import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.component.AuthTextField
 import org.sopt.and.component.SocialLoginButtonGroup
-import org.sopt.and.screens.signup.SignUpActivity
-import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.AuthKey.EMAIL
-import org.sopt.and.utils.AuthKey.PASSWORD
-
-class LoginActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        val localEmail = intent.getStringExtra(EMAIL) ?: ""
-        val localPassword = intent.getStringExtra(PASSWORD) ?: ""
-
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ANDANDROIDTheme {
-                LoginScreen(localEmail, localPassword)
-
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(localEmail: String, localPassword: String) {
+fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
@@ -204,20 +180,23 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                     ),
                     shape = RoundedCornerShape(size = 50.dp),
                     onClick = {
-                        if (email == localEmail && password == localPassword) {
-                            //로그인 성공
-                            Intent(context, MyActivity::class.java).apply {
-                                putExtra(EMAIL, email)
-                                flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                context.startActivity(this)
-                            }
-                        } else {
-                            //로그인 실패
-                            scope.launch {
-                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
-                            }
+                        navController.navigate(Routes.My.screen) {
+                            popUpTo(Routes.My.screen) { inclusive = true }
                         }
+//                        if (email == "localEmail" && password == "localPassword") {
+//                            //로그인 성공
+//                            Intent(context, MyActivity::class.java).apply {
+//                                putExtra(EMAIL, email)
+//                                flags =
+//                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//                                context.startActivity(this)
+//                            }
+//                        } else {
+//                            //로그인 실패
+//                            scope.launch {
+//                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
+//                            }
+//                        }
 
                         //키보드 내리기
                         focusManager.clearFocus()
@@ -263,9 +242,12 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                             fontSize = 12.sp,
                             color = Color.Gray,
                             modifier = Modifier.clickable {
-                                Intent(context, SignUpActivity::class.java).let { intent ->
-                                    context.startActivity(intent)
+                                navController.navigate(Routes.SignUp.screen) {
+                                    popUpTo(Routes.SignUp.screen) { inclusive = true }
                                 }
+//                                Intent(context, SignUpActivity::class.java).let { intent ->
+//                                    context.startActivity(intent)
+//                                }
                             }
                         )
                     }

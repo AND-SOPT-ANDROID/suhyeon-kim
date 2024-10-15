@@ -1,13 +1,7 @@
-package org.sopt.and.screens
+package org.sopt.and.screens.signup
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.os.Bundle
 import android.util.Patterns
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,31 +53,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.component.AuthTextField
 import org.sopt.and.component.SocialLoginButtonGroup
-import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 import org.sopt.and.utils.noRippleClickable
 
-class SignUpActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            ANDANDROIDTheme {
-                SignUpScreen()
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
@@ -244,7 +228,7 @@ fun SignUpScreen() {
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                           focusManager.clearFocus()
+                            focusManager.clearFocus()
                         }
                     ),
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
@@ -285,24 +269,28 @@ fun SignUpScreen() {
                         .background(color = WavveTheme.colors.Gray71)
                         .noRippleClickable {
                             validateInputs() //검증
-                            if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
-                                //검증 성공
-                                showDialog.value = false
-
-                                //회원가입 정보 저장, LoginActivity로 넘어가기
-                                Intent(context, LoginActivity::class.java).apply {
-                                    putExtra("email", email)
-                                    putExtra("password", password)
-                                    flags =
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    (context as? SignUpActivity)?.setResult(RESULT_OK, this)
-                                    context.startActivity(this)
-                                }
-
-                            } else {
-                                //검증 실패
-                                showDialog.value = true
+                            navController.navigate(Routes.Login.screen) {
+                                popUpTo(Routes.Login.screen) { inclusive = true }
                             }
+//                            if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
+//                                //검증 성공
+//                                showDialog.value = false
+//
+//                                //회원가입 정보 저장
+//                                Intent(context, LoginActivity::class.java).apply {
+//                                    putExtra("email", email)
+//                                    putExtra("password", password)
+//                                    flags =
+//                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//                                    (context as? SignUpActivity)?.setResult(RESULT_OK, this)
+//                                    context.startActivity(this)
+//                                }
+//
+//
+//                            } else {
+//                                //검증 실패
+//                                showDialog.value = true
+//                            }
                         },
                 ) {
                     Text(
