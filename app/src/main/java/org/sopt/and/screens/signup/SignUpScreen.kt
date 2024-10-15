@@ -1,7 +1,6 @@
 package org.sopt.and.screens.signup
 
 import android.app.Activity
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,13 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.sharp.Close
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,14 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,52 +39,25 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.component.AuthTextField
+import org.sopt.and.component.ShowErrorDialog
 import org.sopt.and.component.SocialLoginButtonGroup
 import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
-import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
-import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 import org.sopt.and.utils.noRippleClickable
-
+import org.sopt.and.viewmodel.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val showPassword = remember { mutableStateOf(false) }
-
-    var emailErrorMsg by remember { mutableStateOf("") }
-    var passwordErrorMsg by remember { mutableStateOf("") }
-
-    val showDialog = remember { mutableStateOf(false) }
-
-    // 이메일 및 비밀번호 검증 함수
-    fun validateInputs() {
-        emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "유효한 이메일 형식이 아닙니다."
-        } else {
-            ""
-        }
-
-        passwordErrorMsg = if (!isValidPassword(password)) {
-            "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다."
-        } else {
-            ""
-        }
-    }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -169,10 +133,10 @@ fun SignUpScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    value = email,
+                    value = viewModel.email,
                     onValueChange = {
-                        email = it
-                        validateInputs() //검증
+                        viewModel.email = it
+                        viewModel.validateInputs() //검증
                     },
                     placeholder = stringResource(R.string.PlaceholderEmail),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -182,7 +146,7 @@ fun SignUpScreen(navController: NavController) {
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
-                    isError = if (emailErrorMsg.isNotEmpty()) true else false,
+                    isError = if (viewModel.emailErrorMsg.isNotEmpty()) true else false,
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -206,20 +170,20 @@ fun SignUpScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    value = password,
+                    value = viewModel.password,
                     onValueChange = {
-                        password = it
-                        validateInputs() //검증
+                        viewModel.password = it
+                        viewModel.validateInputs() //검증
                     },
                     placeholder = stringResource(R.string.PlaceholderPassword),
                     suffix = {
                         Text(
-                            if (showPassword.value) stringResource(R.string.Hide) else stringResource(
+                            if (viewModel.showPassword.value) stringResource(R.string.Hide) else stringResource(
                                 R.string.Show
                             ),
                             color = Color.White,
                             modifier = Modifier.clickable {
-                                showPassword.value = !showPassword.value
+                                viewModel.showPassword.value = !viewModel.showPassword.value
                             })
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -231,8 +195,8 @@ fun SignUpScreen(navController: NavController) {
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = if (passwordErrorMsg.isNotEmpty()) true else false
+                    visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    isError = if (viewModel.passwordErrorMsg.isNotEmpty()) true else false
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -268,29 +232,19 @@ fun SignUpScreen(navController: NavController) {
                         .fillMaxWidth()
                         .background(color = WavveTheme.colors.Gray71)
                         .noRippleClickable {
-                            validateInputs() //검증
-                            navController.navigate(Routes.Login.screen) {
-                                popUpTo(Routes.Login.screen) { inclusive = true }
+                            viewModel.validateInputs() //검증
+                            if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
+                                //검증 성공
+                                viewModel.showDialog.value = false
+
+                                //회원가입 정보 저장
+                                navController.navigate(Routes.Login.screen) {
+                                    popUpTo(Routes.Login.screen) { inclusive = true }
+                                }
+                            } else {
+                                //검증 실패
+                                viewModel.showDialog.value = true
                             }
-//                            if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
-//                                //검증 성공
-//                                showDialog.value = false
-//
-//                                //회원가입 정보 저장
-//                                Intent(context, LoginActivity::class.java).apply {
-//                                    putExtra("email", email)
-//                                    putExtra("password", password)
-//                                    flags =
-//                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-//                                    (context as? SignUpActivity)?.setResult(RESULT_OK, this)
-//                                    context.startActivity(this)
-//                                }
-//
-//
-//                            } else {
-//                                //검증 실패
-//                                showDialog.value = true
-//                            }
                         },
                 ) {
                     Text(
@@ -302,68 +256,15 @@ fun SignUpScreen(navController: NavController) {
                         fontSize = 18.sp,
                     )
 
-                    if (showDialog.value) {
-                        ShowErrorDialog(showDialog, emailErrorMsg, passwordErrorMsg)
+                    if (viewModel.showDialog.value) {
+                        ShowErrorDialog(
+                            viewModel.showDialog,
+                            viewModel.emailErrorMsg,
+                            viewModel.passwordErrorMsg
+                        )
                     }
                 }
             }
         }
     }
-}
-
-@Composable
-private fun ShowErrorDialog(
-    showDialog: MutableState<Boolean>,
-    isEmailError: String,
-    isPasswordError: String
-) {
-    Dialog(
-        onDismissRequest = { showDialog.value = false }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                textAlign = TextAlign.Center,
-                color = Color.Black,
-                text = when {
-                    isEmailError.isNotEmpty() && isPasswordError.isNotEmpty() -> "$isEmailError\n$isPasswordError"
-                    isEmailError.isNotEmpty() -> isEmailError
-                    isPasswordError.isNotEmpty() -> isPasswordError
-                    else -> ""
-                }
-            )
-            Spacer(modifier = Modifier.height(36.dp))
-            Button(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = { showDialog.value = false },
-                enabled = true
-            ) {
-                Text(stringResource(R.string.OK), color = Color.White)
-            }
-            Spacer(modifier = Modifier.height(14.dp))
-        }
-    }
-}
-
-//비밀번호 검증 함수
-fun isValidPassword(password: String): Boolean {
-    if (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH) return false
-
-    val hasUpperCase = password.any { it.isUpperCase() }
-    val hasLowerCase = password.any { it.isLowerCase() }
-    val hasDigit = password.any { it.isDigit() }
-    val hasSpecialChar = password.any { PASSWORD_PATTERN.contains(it) }
-
-    val complexityCount = listOf(hasUpperCase, hasLowerCase, hasDigit, hasSpecialChar).count { it }
-
-    return complexityCount >= 3
 }

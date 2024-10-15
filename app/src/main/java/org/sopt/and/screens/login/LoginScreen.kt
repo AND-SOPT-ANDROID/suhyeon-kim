@@ -33,11 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -52,25 +49,28 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.component.AuthTextField
 import org.sopt.and.component.SocialLoginButtonGroup
 import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.viewmodel.LoginViewModel
+import org.sopt.and.viewmodel.MyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val showPassword = remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val myViewModel: MyViewModel = viewModel()
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -119,9 +119,9 @@ fun LoginScreen(navController: NavController) {
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = email,
+                    value = viewModel.email,
                     onValueChange = {
-                        email = it
+                        viewModel.email = it
                     },
                     placeholder = stringResource(R.string.EmailOrID),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -140,19 +140,19 @@ fun LoginScreen(navController: NavController) {
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = password,
+                    value = viewModel.password,
                     onValueChange = {
-                        password = it
+                        viewModel.password = it
                     },
                     placeholder = stringResource(R.string.PlaceholderPassword),
                     suffix = {
                         Text(
-                            if (showPassword.value) stringResource(R.string.Hide) else stringResource(
+                            if (viewModel.showPassword.value) stringResource(R.string.Hide) else stringResource(
                                 R.string.Show
                             ),
                             color = Color.White,
                             modifier = Modifier.clickable {
-                                showPassword.value = !showPassword.value
+                                viewModel.showPassword.value = !viewModel.showPassword.value
                             })
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -164,7 +164,7 @@ fun LoginScreen(navController: NavController) {
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
                 )
 
 
@@ -180,23 +180,19 @@ fun LoginScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(size = 50.dp),
                     onClick = {
-                        navController.navigate(Routes.My.screen) {
-                            popUpTo(Routes.My.screen) { inclusive = true }
+
+                        if (viewModel.email == "localEmail" && viewModel.password == "localPassword") {
+                            //로그인 성공
+                            myViewModel.setUserEmail(viewModel.email)
+                            navController.navigate(Routes.My.screen) {
+                                popUpTo(Routes.My.screen) { inclusive = true }
+                            }
+                        } else {
+                            //로그인 실패
+                            scope.launch {
+                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
+                            }
                         }
-//                        if (email == "localEmail" && password == "localPassword") {
-//                            //로그인 성공
-//                            Intent(context, MyActivity::class.java).apply {
-//                                putExtra(EMAIL, email)
-//                                flags =
-//                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-//                                context.startActivity(this)
-//                            }
-//                        } else {
-//                            //로그인 실패
-//                            scope.launch {
-//                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
-//                            }
-//                        }
 
                         //키보드 내리기
                         focusManager.clearFocus()
@@ -245,9 +241,6 @@ fun LoginScreen(navController: NavController) {
                                 navController.navigate(Routes.SignUp.screen) {
                                     popUpTo(Routes.SignUp.screen) { inclusive = true }
                                 }
-//                                Intent(context, SignUpActivity::class.java).let { intent ->
-//                                    context.startActivity(intent)
-//                                }
                             }
                         )
                     }

@@ -33,13 +33,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.component.EmptyBox
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
-fun MyScreen(navController: NavController) {
+fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     //화면 진입 시 snackBar 표시
@@ -76,7 +78,7 @@ fun MyScreen(navController: NavController) {
                             )
 
                             Text(
-                                text = "localEmail",
+                                text = viewModel.userEmail.value ?: "프로필",
                                 color = Color.White,
                                 modifier = Modifier.padding(start = 10.dp)
                             )
