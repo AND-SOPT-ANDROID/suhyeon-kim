@@ -64,6 +64,7 @@ import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
+import org.sopt.and.utils.CustomIndication
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -271,7 +272,7 @@ fun SignUpScreen() {
                         .clickable(
                             //ripple 효과 제거
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = null
+                            indication = CustomIndication
                         ) {
                             validateInputs() //검증
                             if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
