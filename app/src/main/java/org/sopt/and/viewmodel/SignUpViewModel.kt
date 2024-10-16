@@ -5,8 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import org.sopt.and.utils.AuthKey.PASSWORD_MAX_LENGTH
-import org.sopt.and.utils.AuthKey.PASSWORD_MIN_LENGTH
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpViewModel : ViewModel() {
@@ -18,7 +16,7 @@ class SignUpViewModel : ViewModel() {
     var passwordErrorMsg by mutableStateOf("")
 
     val showDialog = mutableStateOf(false)
-
+    private val regex = Regex(PASSWORD_PATTERN)
 
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs() {
@@ -36,17 +34,7 @@ class SignUpViewModel : ViewModel() {
     }
 
     //비밀번호 검증 함수
-    fun isValidPassword(password: String): Boolean {
-        if (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH) return false
-
-        val hasUpperCase = password.any { it.isUpperCase() }
-        val hasLowerCase = password.any { it.isLowerCase() }
-        val hasDigit = password.any { it.isDigit() }
-        val hasSpecialChar = password.any { PASSWORD_PATTERN.contains(it) }
-
-        val complexityCount =
-            listOf(hasUpperCase, hasLowerCase, hasDigit, hasSpecialChar).count { it }
-
-        return complexityCount >= 3
+    private fun isValidPassword(password: String): Boolean {
+        return password.matches(regex)
     }
 }
