@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
@@ -57,7 +58,7 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
                 )
 
                 Text(
-                    text = viewModel.userEmail.value ?: "프로필",
+                    text = viewModel.userEmail.value ?: DEFAULT_NAME,
                     color = Color.White,
                     modifier = Modifier.padding(start = 10.dp)
                 )

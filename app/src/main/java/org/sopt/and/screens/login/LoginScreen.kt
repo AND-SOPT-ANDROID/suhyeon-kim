@@ -1,6 +1,6 @@
 package org.sopt.and.screens.login
 
-import android.app.Activity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,9 +63,8 @@ import org.sopt.and.viewmodel.MyViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,8 +86,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     IconButton(
                         onClick = {
                             //뒤로가기
-                            (context as? Activity)?.finish()
-
+                            dispatcher.onBackPressed()
                         }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft,

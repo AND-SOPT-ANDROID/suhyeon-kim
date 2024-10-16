@@ -1,8 +1,7 @@
 package org.sopt.and.screens.signup
 
-import android.app.Activity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -60,6 +59,7 @@ import org.sopt.and.viewmodel.SignUpViewModel
 fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -74,8 +74,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 actions = {
                     IconButton(onClick = {
                         //뒤로가기
-                        (context as? Activity)?.finish()
-
+                        dispatcher.onBackPressed()
                     }) {
                         Icon(
                             imageVector = Icons.Sharp.Close,
@@ -260,9 +259,9 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
 
                     if (viewModel.showDialog.value) {
                         ErrorDialog(
-                            showDialog =  viewModel.showDialog,
-                            isEmailError =  viewModel.emailErrorMsg,
-                            isPasswordError =  viewModel.passwordErrorMsg,
+                            showDialog = viewModel.showDialog,
+                            isEmailError = viewModel.emailErrorMsg,
+                            isPasswordError = viewModel.passwordErrorMsg,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(20.dp))
