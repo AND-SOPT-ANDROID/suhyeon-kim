@@ -88,6 +88,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         onClick = {
                             //뒤로가기
                             (context as? Activity)?.finish()
+
                         }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
@@ -99,6 +100,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = WavveTheme.colors.BackgroundGray)
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
             )
         }
     ) { innerPadding ->
@@ -251,11 +257,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 //소셜 로그인 버튼
                 SocialLoginButtonGroup(stringResource(R.string.SocialLogin))
             }
-
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
         }
 
     }

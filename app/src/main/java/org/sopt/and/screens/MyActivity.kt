@@ -102,24 +102,18 @@ fun MyScreen(localEmail: String) {
 
                             Spacer(modifier = Modifier.weight(1f))
 
-                            IconButton(
-                                onClick = {
-                                }) {
                                 Icon(
                                     Icons.Outlined.Notifications,
                                     contentDescription = stringResource(R.string.Notifications),
                                     tint = Color.White
                                 )
-                            }
-                            IconButton(
-                                onClick = {
-                                }) {
+
                                 Icon(
                                     Icons.Outlined.Settings,
                                     contentDescription = stringResource(R.string.Settings),
                                     tint = Color.White
                                 )
-                            }
+
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))

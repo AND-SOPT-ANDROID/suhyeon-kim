@@ -69,8 +69,8 @@ import org.sopt.and.utils.AuthKey.PASSWORD
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val localEmail = intent.getStringExtra(EMAIL) ?: ""
-        val localPassword = intent.getStringExtra(PASSWORD) ?: ""
+        val localEmail = intent.getStringExtra(EMAIL).orEmpty()
+        val localPassword = intent.getStringExtra(PASSWORD).orEmpty()
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
