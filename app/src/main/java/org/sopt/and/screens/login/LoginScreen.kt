@@ -57,6 +57,7 @@ import org.sopt.and.component.AuthTextField
 import org.sopt.and.component.SocialLoginButtonGroup
 import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.noRippleClickable
 import org.sopt.and.viewmodel.LoginViewModel
 import org.sopt.and.viewmodel.MyViewModel
 
@@ -157,7 +158,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                                 R.string.Show
                             ),
                             color = Color.White,
-                            modifier = Modifier.clickable {
+                            modifier = Modifier.noRippleClickable {
                                 viewModel.showPassword.value = !viewModel.showPassword.value
                             })
                     },

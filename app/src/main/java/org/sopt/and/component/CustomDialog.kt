@@ -22,19 +22,17 @@ import androidx.compose.ui.window.Dialog
 import org.sopt.and.R
 
 @Composable
-fun ShowErrorDialog(
+fun ErrorDialog(
     showDialog: MutableState<Boolean>,
     isEmailError: String,
-    isPasswordError: String
+    isPasswordError: String,
+    modifier: Modifier = Modifier
 ) {
     Dialog(
         onDismissRequest = { showDialog.value = false }
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White),
+            modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(40.dp))

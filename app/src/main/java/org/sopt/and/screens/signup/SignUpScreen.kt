@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.component.AuthTextField
-import org.sopt.and.component.ShowErrorDialog
+import org.sopt.and.component.ErrorDialog
 import org.sopt.and.component.SocialLoginButtonGroup
 import org.sopt.and.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
@@ -182,7 +184,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                                 R.string.Show
                             ),
                             color = Color.White,
-                            modifier = Modifier.clickable {
+                            modifier = Modifier.noRippleClickable {
                                 viewModel.showPassword.value = !viewModel.showPassword.value
                             })
                     },
@@ -257,10 +259,14 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                     )
 
                     if (viewModel.showDialog.value) {
-                        ShowErrorDialog(
-                            viewModel.showDialog,
-                            viewModel.emailErrorMsg,
-                            viewModel.passwordErrorMsg
+                        ErrorDialog(
+                            showDialog =  viewModel.showDialog,
+                            isEmailError =  viewModel.emailErrorMsg,
+                            isPasswordError =  viewModel.passwordErrorMsg,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(Color.White)
                         )
                     }
                 }
