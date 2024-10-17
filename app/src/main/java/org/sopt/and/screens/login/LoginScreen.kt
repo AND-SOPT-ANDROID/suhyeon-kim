@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +64,7 @@ import org.sopt.and.viewmodel.MyViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
@@ -77,7 +79,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 title = {
                     Image(
                         painter = painterResource(id = R.drawable.iv_wavve_logo),
-                        contentDescription = stringResource(R.string.Wavve_logo),
+                        contentDescription = stringResource(R.string.wavve_logo),
                         modifier = Modifier
                             .size(90.dp)
                     )
@@ -85,12 +87,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            //뒤로가기
                             dispatcher.onBackPressed()
                         }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                            contentDescription = stringResource(R.string.Back),
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(40.dp)
@@ -127,7 +128,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     onValueChange = {
                         viewModel.email = it
                     },
-                    placeholder = stringResource(R.string.EmailOrID),
+                    placeholder = stringResource(R.string.email_or_id),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -136,7 +137,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
                 )
-
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -148,16 +148,17 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     onValueChange = {
                         viewModel.password = it
                     },
-                    placeholder = stringResource(R.string.PlaceholderPassword),
+                    placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (viewModel.showPassword.value) stringResource(R.string.Hide) else stringResource(
-                                R.string.Show
+                            if (viewModel.showPassword.value) stringResource(R.string.hide) else stringResource(
+                                R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
                                 viewModel.showPassword.value = !viewModel.showPassword.value
-                            })
+                            },
+                        )
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
@@ -170,7 +171,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     ),
                     visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
                 )
-
 
                 Spacer(modifier = Modifier.height(30.dp))
 
@@ -194,7 +194,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         } else {
                             //로그인 실패
                             scope.launch {
-                                snackbarHostState.showSnackbar("로그인에 실패했습니다.")
+                                snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
                             }
                         }
 
@@ -203,7 +203,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     },
                 ) {
                     Text(
-                        text = stringResource(R.string.Login),
+                        text = stringResource(R.string.login),
                         color = Color.White
                     )
                 }
@@ -220,7 +220,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         modifier = Modifier.height(IntrinsicSize.Min)
                     ) {
                         Text(
-                            stringResource(R.string.FindID),
+                            stringResource(R.string.find_id),
                             fontSize = 12.sp,
                             color = Color.Gray,
                         )
@@ -229,7 +229,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                             color = Color.DarkGray
                         )
                         Text(
-                            stringResource(R.string.ResetPassword),
+                            stringResource(R.string.reset_password),
                             fontSize = 12.sp,
                             color = Color.Gray,
                         )
@@ -238,7 +238,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                             color = Color.DarkGray
                         )
                         Text(
-                            stringResource(R.string.SignUp),
+                            stringResource(R.string.sign_up),
                             fontSize = 12.sp,
                             color = Color.Gray,
                             modifier = Modifier.clickable {
@@ -253,7 +253,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 Spacer(modifier = Modifier.height(40.dp))
 
                 //소셜 로그인 버튼
-                SocialLoginButtonGroup(stringResource(R.string.SocialLogin))
+                SocialLoginButtonGroup(stringResource(R.string.social_description))
             }
         }
 

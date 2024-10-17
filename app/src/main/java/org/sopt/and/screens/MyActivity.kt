@@ -22,7 +22,6 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -88,7 +87,7 @@ fun MyScreen(localEmail: String) {
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_launcher_background),
-                                contentDescription = stringResource(R.string.Profile),
+                                contentDescription = stringResource(R.string.profile),
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .size(50.dp)
@@ -104,13 +103,13 @@ fun MyScreen(localEmail: String) {
 
                                 Icon(
                                     Icons.Outlined.Notifications,
-                                    contentDescription = stringResource(R.string.Notifications),
+                                    contentDescription = stringResource(R.string.notifications),
                                     tint = Color.White
                                 )
 
                                 Icon(
                                     Icons.Outlined.Settings,
-                                    contentDescription = stringResource(R.string.Settings),
+                                    contentDescription = stringResource(R.string.settings),
                                     tint = Color.White
                                 )
 
@@ -119,7 +118,7 @@ fun MyScreen(localEmail: String) {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         Text(
-                            stringResource(R.string.FirstBuyBenefit),
+                            stringResource(R.string.first_buy_benefit),
                             color = Color.Gray,
                             modifier = Modifier.padding(start = 20.dp)
                         )
@@ -127,10 +126,10 @@ fun MyScreen(localEmail: String) {
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(start = 20.dp)
                         ) {
-                            Text(stringResource(R.string.Buy), color = Color.White)
+                            Text(stringResource(R.string.buy), color = Color.White)
                             Icon(
                                 Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = stringResource(R.string.Buy),
+                                contentDescription = stringResource(R.string.buy),
                                 tint = Color.White
                             )
                         }
@@ -148,7 +147,7 @@ fun MyScreen(localEmail: String) {
                 ) {
                     Column {
                         Text(
-                            stringResource(R.string.NoTicket),
+                            stringResource(R.string.no_ticket),
                             color = Color.Gray,
                             modifier = Modifier.padding(start = 20.dp)
                         )
@@ -156,10 +155,10 @@ fun MyScreen(localEmail: String) {
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(start = 20.dp)
                         ) {
-                            Text(stringResource(R.string.Buy), color = Color.White)
+                            Text(stringResource(R.string.buy), color = Color.White)
                             Icon(
                                 Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                contentDescription = stringResource(R.string.Buy),
+                                contentDescription = stringResource(R.string.buy),
                                 tint = Color.White
                             )
                         }
@@ -170,16 +169,16 @@ fun MyScreen(localEmail: String) {
 
                 //전체 시청 내역
                 EmptyBox(
-                    stringResource(R.string.ViewingHistory),
-                    stringResource(R.string.NoViewingHistory),
+                    stringResource(R.string.viewing_history),
+                    stringResource(R.string.no_viewing_history),
                     )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //관심 프로그램
                 EmptyBox(
-                    stringResource(R.string.InterestedProgram),
-                    stringResource(R.string.NoInterestedProgram),
+                    stringResource(R.string.interested_program),
+                    stringResource(R.string.no_interested_program),
                 )
             }
 

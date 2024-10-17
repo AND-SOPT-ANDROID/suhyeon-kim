@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,11 +28,12 @@ import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
 fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     //화면 진입 시 snackBar 표시
     LaunchedEffect(Unit) {
-        snackbarHostState.showSnackbar("환영합니다!")
+        snackbarHostState.showSnackbar(context.getString(R.string.welcome))
     }
 
     Scaffold(
@@ -61,16 +63,16 @@ fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel())
 
                 //전체 시청 내역
                 EmptyBox(
-                    stringResource(R.string.ViewingHistory),
-                    stringResource(R.string.NoViewingHistory),
+                    stringResource(R.string.viewing_history),
+                    stringResource(R.string.no_viewing_history),
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 //관심 프로그램
                 EmptyBox(
-                    stringResource(R.string.InterestedProgram),
-                    stringResource(R.string.NoInterestedProgram),
+                    stringResource(R.string.interested_program),
+                    stringResource(R.string.no_interested_program),
                 )
             }
         }

@@ -79,7 +79,7 @@ fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
                 color = Color.Gray,
             )
             Text(
-                stringResource(R.string.SocialLoginDescription),
+                stringResource(R.string.social_info),
                 fontSize = 12.sp,
                 color = Color.Gray,
             )

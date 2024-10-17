@@ -100,13 +100,13 @@ fun SignUpScreen() {
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs() {
         emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "유효한 이메일 형식이 아닙니다."
+            context.getString(R.string.dialog_no_valid_email)
         } else {
             ""
         }
 
         passwordErrorMsg = if (!isValidPassword111(password)) {
-            "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다."
+            context.getString(R.string.dialog_no_valid_password)
         } else {
             ""
         }
@@ -117,7 +117,7 @@ fun SignUpScreen() {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        stringResource(R.string.SignUp),
+                        stringResource(R.string.sign_up),
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -130,7 +130,7 @@ fun SignUpScreen() {
                     }) {
                         Icon(
                             imageVector = Icons.Sharp.Close,
-                            contentDescription = stringResource(R.string.Back),
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(40.dp)
@@ -191,7 +191,7 @@ fun SignUpScreen() {
                         email = it
                         validateInputs() //검증
                     },
-                    placeholder = stringResource(R.string.PlaceholderEmail),
+                    placeholder = stringResource(R.string.placeholder_email),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -210,10 +210,10 @@ fun SignUpScreen() {
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.Info),
+                        contentDescription = stringResource(R.string.info),
                         tint = Color.Gray,
                     )
-                    Text(stringResource(R.string.EmailHelperText), color = Color.Gray)
+                    Text(stringResource(R.string.helper_text_email), color = Color.Gray)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -228,11 +228,11 @@ fun SignUpScreen() {
                         password = it
                         validateInputs() //검증
                     },
-                    placeholder = stringResource(R.string.PlaceholderPassword),
+                    placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (showPassword.value) stringResource(R.string.Hide) else stringResource(
-                                R.string.Show
+                            if (showPassword.value) stringResource(R.string.hide) else stringResource(
+                                R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.clickable {
@@ -260,11 +260,11 @@ fun SignUpScreen() {
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.Info),
+                        contentDescription = stringResource(R.string.info),
                         tint = Color.Gray,
                     )
                     Text(
-                        stringResource(R.string.PasswordHelperText),
+                        stringResource(R.string.helper_text_password),
                         color = Color.Gray
                     )
                 }
@@ -273,7 +273,7 @@ fun SignUpScreen() {
 
                 //소셜 로그인
                 SocialLoginButtonGroup(
-                    stringResource(R.string.SocialSignUp),
+                    stringResource(R.string.social_description_2),
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
@@ -307,7 +307,7 @@ fun SignUpScreen() {
                         },
                 ) {
                     Text(
-                        stringResource(R.string.WavveSignUp),
+                        stringResource(R.string.sign_up_button),
                         modifier = Modifier
                             .padding(vertical = 18.dp)
                             .align(Alignment.Center),
@@ -360,7 +360,7 @@ private fun ShowErrorDialog(
                 onClick = { showDialog.value = false },
                 enabled = true
             ) {
-                Text(stringResource(R.string.OK), color = Color.White)
+                Text(stringResource(R.string.ok), color = Color.White)
             }
             Spacer(modifier = Modifier.height(14.dp))
         }

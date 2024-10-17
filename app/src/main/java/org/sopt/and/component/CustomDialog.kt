@@ -52,7 +52,7 @@ fun ErrorDialog(
                 onClick = { showDialog.value = false },
                 enabled = true
             ) {
-                Text(stringResource(R.string.OK), color = Color.White)
+                Text(stringResource(R.string.ok), color = Color.White)
             }
             Spacer(modifier = Modifier.height(14.dp))
         }

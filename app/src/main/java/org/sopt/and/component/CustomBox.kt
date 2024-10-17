@@ -51,7 +51,7 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = stringResource(R.string.Profile),
+                    contentDescription = stringResource(R.string.profile),
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(50.dp)
@@ -68,13 +68,13 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
 
                 Icon(
                     Icons.Outlined.Notifications,
-                    contentDescription = stringResource(R.string.Notifications),
+                    contentDescription = stringResource(R.string.notifications),
                     tint = Color.White
                 )
 
                 Icon(
                     Icons.Outlined.Settings,
-                    contentDescription = stringResource(R.string.Settings),
+                    contentDescription = stringResource(R.string.settings),
                     tint = Color.White
                 )
             }
@@ -82,7 +82,7 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                stringResource(R.string.FirstBuyBenefit),
+                stringResource(R.string.first_buy_benefit),
                 color = Color.Gray,
                 modifier = Modifier.padding(start = 20.dp)
             )
@@ -90,10 +90,10 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(start = 20.dp)
             ) {
-                Text(stringResource(R.string.Buy), color = Color.White)
+                Text(stringResource(R.string.buy), color = Color.White)
                 Icon(
                     Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.Buy),
+                    contentDescription = stringResource(R.string.buy),
                     tint = Color.White
                 )
             }
@@ -111,7 +111,7 @@ fun TicketBox() {
     ) {
         Column {
             Text(
-                stringResource(R.string.NoTicket),
+                stringResource(R.string.no_ticket),
                 color = Color.Gray,
                 modifier = Modifier.padding(start = 20.dp)
             )
@@ -119,10 +119,10 @@ fun TicketBox() {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(start = 20.dp)
             ) {
-                Text(stringResource(R.string.Buy), color = Color.White)
+                Text(stringResource(R.string.buy), color = Color.White)
                 Icon(
                     Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.Buy),
+                    contentDescription = stringResource(R.string.buy),
                     tint = Color.White
                 )
             }

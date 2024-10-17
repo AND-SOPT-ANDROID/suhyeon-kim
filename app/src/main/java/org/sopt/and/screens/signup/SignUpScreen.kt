@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -57,7 +56,6 @@ import org.sopt.and.viewmodel.SignUpViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
 
@@ -66,7 +64,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        stringResource(R.string.SignUp),
+                        stringResource(R.string.sign_up),
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -78,7 +76,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                     }) {
                         Icon(
                             imageVector = Icons.Sharp.Close,
-                            contentDescription = stringResource(R.string.Back),
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(40.dp)
@@ -104,10 +102,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {
-                            append("이메일과 비밀번호")
+                            append(stringResource(R.string.email_and_password))
                         }
                         withStyle(style = SpanStyle(color = Color.Gray)) {
-                            append("만으로")
+                            append(stringResource(R.string.only))
                         }
                     },
                     fontSize = 20.sp,
@@ -117,10 +115,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {
-                            append("Wavve를 즐길 수")
+                            append(stringResource(R.string.wavve_Enjoy))
                         }
                         withStyle(style = SpanStyle(color = Color.Gray)) {
-                            append(" 있어요!")
+                            append(stringResource(R.string.able))
                         }
                     },
                     fontSize = 20.sp,
@@ -139,7 +137,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         viewModel.email = it
                         viewModel.validateInputs() //검증
                     },
-                    placeholder = stringResource(R.string.PlaceholderEmail),
+                    placeholder = stringResource(R.string.placeholder_email),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -158,10 +156,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.Info),
+                        contentDescription = stringResource(R.string.info),
                         tint = Color.Gray,
                     )
-                    Text(stringResource(R.string.EmailHelperText), color = Color.Gray)
+                    Text(stringResource(R.string.helper_text_email), color = Color.Gray)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -176,11 +174,11 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         viewModel.password = it
                         viewModel.validateInputs() //검증
                     },
-                    placeholder = stringResource(R.string.PlaceholderPassword),
+                    placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (viewModel.showPassword.value) stringResource(R.string.Hide) else stringResource(
-                                R.string.Show
+                            if (viewModel.showPassword.value) stringResource(R.string.hide) else stringResource(
+                                R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
@@ -208,11 +206,11 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 ) {
                     Icon(
                         Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.Info),
+                        contentDescription = stringResource(R.string.info),
                         tint = Color.Gray,
                     )
                     Text(
-                        stringResource(R.string.PasswordHelperText),
+                        stringResource(R.string.helper_text_password),
                         color = Color.Gray
                     )
                 }
@@ -221,7 +219,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
 
                 //소셜 로그인
                 SocialLoginButtonGroup(
-                    stringResource(R.string.SocialSignUp),
+                    stringResource(R.string.social_description_2),
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
@@ -249,7 +247,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         },
                 ) {
                     Text(
-                        stringResource(R.string.WavveSignUp),
+                        stringResource(R.string.sign_up_button),
                         modifier = Modifier
                             .padding(vertical = 18.dp)
                             .align(Alignment.Center),

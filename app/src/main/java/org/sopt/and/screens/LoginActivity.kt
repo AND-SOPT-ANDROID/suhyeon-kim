@@ -102,7 +102,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                 title = {
                     Image(
                         painter = painterResource(id = R.drawable.iv_wavve_logo),
-                        contentDescription = stringResource(R.string.Wavve_logo),
+                        contentDescription = stringResource(R.string.wavve_logo),
                         modifier = Modifier
                             .size(90.dp)
                     )
@@ -115,7 +115,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                         }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-                            contentDescription = stringResource(R.string.Back),
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(40.dp)
@@ -147,7 +147,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                     onValueChange = {
                         email = it
                     },
-                    placeholder = stringResource(R.string.EmailOrID),
+                    placeholder = stringResource(R.string.email_or_id),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -168,11 +168,11 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                     onValueChange = {
                         password = it
                     },
-                    placeholder = stringResource(R.string.PlaceholderPassword),
+                    placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (showPassword.value) stringResource(R.string.Hide) else stringResource(
-                                R.string.Show
+                            if (showPassword.value) stringResource(R.string.hide) else stringResource(
+                                R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.clickable {
@@ -224,7 +224,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                     },
                 ) {
                     Text(
-                        text = stringResource(R.string.Login),
+                        text = stringResource(R.string.login),
                         color = Color.White
                     )
                 }
@@ -241,7 +241,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                         modifier = Modifier.height(IntrinsicSize.Min)
                     ) {
                         Text(
-                            stringResource(R.string.FindID),
+                            stringResource(R.string.find_id),
                             fontSize = 12.sp,
                             color = Color.Gray,
                         )
@@ -250,7 +250,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                             color = Color.DarkGray
                         )
                         Text(
-                            stringResource(R.string.ResetPassword),
+                            stringResource(R.string.reset_password),
                             fontSize = 12.sp,
                             color = Color.Gray,
                         )
@@ -259,7 +259,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                             color = Color.DarkGray
                         )
                         Text(
-                            stringResource(R.string.SignUp),
+                            stringResource(R.string.sign_up),
                             fontSize = 12.sp,
                             color = Color.Gray,
                             modifier = Modifier.clickable {
@@ -274,7 +274,7 @@ fun LoginScreen(localEmail: String, localPassword: String) {
                 Spacer(modifier = Modifier.height(40.dp))
 
                 //소셜 로그인 버튼
-                SocialLoginButtonGroup(stringResource(R.string.SocialLogin))
+                SocialLoginButtonGroup(stringResource(R.string.social_description))
             }
 
             SnackbarHost(
