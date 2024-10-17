@@ -7,10 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.sopt.and.screens.Routes
-import org.sopt.and.screens.login.LoginScreen
-import org.sopt.and.screens.mypage.MyScreen
-import org.sopt.and.screens.signup.SignUpScreen
+import org.sopt.and.presentation.screens.Routes
+import org.sopt.and.presentation.screens.login.LoginScreen
+import org.sopt.and.presentation.screens.mypage.MyScreen
+import org.sopt.and.presentation.screens.signup.SignUpScreen
 import org.sopt.and.ui.theme.ANDANDROIDTheme
 import org.sopt.and.viewmodel.LoginViewModel
 import org.sopt.and.viewmodel.MyViewModel

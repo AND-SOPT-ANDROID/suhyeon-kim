@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
+import org.sopt.and.presentation.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpViewModel : ViewModel() {
     var email by mutableStateOf("")

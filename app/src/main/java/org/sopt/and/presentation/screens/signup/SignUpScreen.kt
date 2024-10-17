@@ -1,4 +1,4 @@
-package org.sopt.and.screens.signup
+package org.sopt.and.presentation.screens.signup
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
@@ -45,12 +45,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.component.AuthTextField
-import org.sopt.and.component.ErrorDialog
-import org.sopt.and.component.SocialLoginButtonGroup
-import org.sopt.and.screens.Routes
+import org.sopt.and.presentation.component.AuthTextField
+import org.sopt.and.presentation.component.ErrorDialog
+import org.sopt.and.presentation.component.SocialLoginButtonGroup
+import org.sopt.and.presentation.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.noRippleClickable
+import org.sopt.and.presentation.utils.noRippleClickable
 import org.sopt.and.viewmodel.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

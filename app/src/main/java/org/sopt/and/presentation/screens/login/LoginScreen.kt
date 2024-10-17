@@ -1,4 +1,4 @@
-package org.sopt.and.screens.login
+package org.sopt.and.presentation.screens.login
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
@@ -53,11 +53,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import org.sopt.and.R
-import org.sopt.and.component.AuthTextField
-import org.sopt.and.component.SocialLoginButtonGroup
-import org.sopt.and.screens.Routes
+import org.sopt.and.presentation.component.AuthTextField
+import org.sopt.and.presentation.component.SocialLoginButtonGroup
+import org.sopt.and.presentation.screens.Routes
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.noRippleClickable
+import org.sopt.and.presentation.utils.noRippleClickable
 import org.sopt.and.viewmodel.LoginViewModel
 import org.sopt.and.viewmodel.MyViewModel
 
