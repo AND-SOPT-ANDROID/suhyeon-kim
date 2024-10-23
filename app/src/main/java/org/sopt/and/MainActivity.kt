@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.Login.screen,
+                        startDestination = Routes.Home.screen,
                     ) {
                         composable(Routes.Login.screen) {
                             isBottomAppBarVisible = false
