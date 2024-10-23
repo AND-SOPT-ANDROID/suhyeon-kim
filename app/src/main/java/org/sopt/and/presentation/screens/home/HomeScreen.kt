@@ -7,15 +7,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,9 +38,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
+import org.sopt.and.data.model.TodayTopData
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.MyViewModel
 import org.sopt.and.presentation.component.Banner
+import org.sopt.and.presentation.component.EditorRecommendBox
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +55,13 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
     val homeTabText = listOf(
         "뉴클래식", "드라마", "예능", "영화", "애니", "해외시리즈"
     )
+
+    val dummy = List(20) {
+        TodayTopData(
+            painterId = R.drawable.ic_launcher_background,
+            ranking = it + 1
+        )
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -104,6 +117,17 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     Banner(pagerState)
                 }
 
+                EditorRecommendTitle()
+                LazyRow(
+                    modifier = Modifier.padding(bottom = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                ) {
+                    items(items = dummy, key = { it.ranking }) { item ->
+                        EditorRecommendBox(topData = item, modifier = Modifier)
+                    }
+                }
+
             }
         }
     }
@@ -124,5 +148,25 @@ private fun TabTitle(homeTabText: List<String>, modifier: Modifier = Modifier) {
                 color = Color.Gray
             )
         }
+    }
+}
+
+@Composable
+private fun EditorRecommendTitle(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .padding(horizontal = 20.dp),
+    ) {
+        Text(
+            text = "믿고 보는 웨이브 에디터 추천작",
+            fontSize = 20.sp,
+            color = Color.White
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+            contentDescription = "더보기",
+            tint = Color.White,
+        )
     }
 }

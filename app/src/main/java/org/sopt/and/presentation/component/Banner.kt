@@ -35,7 +35,7 @@ fun Banner(pagerState: PagerState, modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "stringResource(R.string.profile)",
+            contentDescription = "배너 이미지",
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),
