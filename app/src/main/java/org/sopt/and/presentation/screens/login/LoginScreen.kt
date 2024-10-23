@@ -188,8 +188,8 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         if (viewModel.email == "localEmail" && viewModel.password == "localPassword") {
                             //로그인 성공
                             myViewModel.setUserEmail(viewModel.email)
-                            navController.navigate(Routes.My.screen) {
-                                popUpTo(Routes.My.screen) { inclusive = true }
+                            navController.navigate(Routes.Home.screen) {
+                                popUpTo(Routes.Home.screen) { inclusive = true }
                             }
                         } else {
                             //로그인 실패
