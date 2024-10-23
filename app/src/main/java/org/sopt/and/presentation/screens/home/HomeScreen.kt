@@ -39,10 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.data.model.TodayTopData
-import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
 import org.sopt.and.presentation.component.Banner
 import org.sopt.and.presentation.component.EditorRecommendBox
+import org.sopt.and.presentation.component.TodayTop20Box
+import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.viewmodel.MyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,6 +129,15 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     }
                 }
 
+                TodayTop20Title()
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp)
+                ) {
+                    items(items = dummy, key = { it.ranking }) { item ->
+                        TodayTop20Box(topData = item, modifier = Modifier.padding(bottom = 90.dp))
+                    }
+                }
             }
         }
     }
@@ -169,4 +179,14 @@ private fun EditorRecommendTitle(modifier: Modifier = Modifier) {
             tint = Color.White,
         )
     }
+}
+
+@Composable
+private fun TodayTop20Title(modifier: Modifier = Modifier) {
+    Text(
+        modifier = modifier.padding(horizontal = 20.dp),
+        text = "오늘의 TOP 20",
+        fontSize = 20.sp,
+        color = Color.White
+    )
 }
