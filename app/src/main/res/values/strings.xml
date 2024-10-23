@@ -44,5 +44,22 @@
     <string name="able"> 있어요!</string>
     <string name="fail_to_login">로그인에 실패했습니다.</string>
     <string name="welcome">환영합니다!</string>
+    <string name="home_banner">배너 이미지</string>
+    <string name="editor_recommended_work">에디터 추천작</string>
+    <string name="today_top">Top 20 이미지</string>
+    <string name="editor_recommend_title">믿고 보는 웨이브 에디터 추천작</string>
+    <string name="today_top_20_title">오늘의 TOP 20</string>
+    <string name="more">더보기</string>
+    <string name="drama">드라마</string>
+    <string name="movie">영화</string>
+    <string name="animation">애니</string>
+    <string name="new_classic">뉴클래식</string>
+    <string name="overseas_series">해외시리즈</string>
+    <string name="variety_show">예능</string>
+    <string name="wifi">WIFI</string>
+    <string name="live">LIVE</string>
+    <string name="home">홈</string>
+    <string name="search">검색</string>
+    <string name="my">MY</string>
 
 </resources>

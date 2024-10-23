@@ -74,12 +74,12 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Outlined.Home,
-                                            contentDescription = "홈",
+                                            contentDescription = stringResource(R.string.home),
                                             modifier = Modifier.padding(bottom = 5.dp),
                                             tint = if (selected.value == "홈") Color.White else Color.Gray
                                         )
                                     },
-                                    label = "홈",
+                                    label = stringResource(R.string.home),
                                     selected = selected,
                                     modifier = Modifier
                                         .noRippleClickable {
@@ -93,12 +93,12 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Icon(
                                             imageVector = Icons.Outlined.Search,
-                                            contentDescription = "검색",
+                                            contentDescription = stringResource(R.string.search),
                                             modifier = Modifier.padding(bottom = 5.dp),
                                             tint = if (selected.value == "검색") Color.White else Color.Gray
                                         )
                                     },
-                                    label = "검색",
+                                    label = stringResource(R.string.search),
                                     selected = selected,
                                     modifier = Modifier
                                         .noRippleClickable {
@@ -112,13 +112,13 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Image(
                                             painter = painterResource(id = R.drawable.ic_launcher_background),
-                                            contentDescription = stringResource(R.string.profile),
+                                            contentDescription = stringResource(R.string.my),
                                             modifier = Modifier
                                                 .clip(CircleShape)
                                                 .size(30.dp)
                                         )
                                     },
-                                    label = "MY",
+                                    label = stringResource(R.string.my),
                                     selected = selected,
                                     modifier = Modifier
                                         .noRippleClickable {

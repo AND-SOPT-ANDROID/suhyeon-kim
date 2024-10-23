@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -35,7 +36,7 @@ fun Banner(pagerState: PagerState, modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "배너 이미지",
+            contentDescription = stringResource(R.string.home_banner),
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),

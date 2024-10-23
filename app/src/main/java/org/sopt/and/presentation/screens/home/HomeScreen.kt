@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,7 +55,12 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
     )
 
     val homeTabText = listOf(
-        "뉴클래식", "드라마", "예능", "영화", "애니", "해외시리즈"
+        stringResource(R.string.new_classic),
+        stringResource(R.string.drama),
+        stringResource(R.string.variety_show),
+        stringResource(R.string.movie),
+        stringResource(R.string.animation),
+        stringResource(R.string.overseas_series)
     )
 
     val dummy = List(20) {
@@ -71,7 +77,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                 title = {
                     Image(
                         painter = painterResource(id = R.drawable.iv_wavve_logo),
-                        contentDescription = "stringResource(R.string.wavve_logo)",
+                        contentDescription = stringResource(R.string.wavve_logo),
                         modifier = Modifier
                             .size(90.dp)
                     )
@@ -80,12 +86,12 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     Icon(
                         modifier = Modifier.padding(end = 15.dp),
                         imageVector = Icons.Outlined.Menu,
-                        contentDescription = "WIFI",
+                        contentDescription = stringResource(R.string.wifi),
                         tint = Color.White
                     )
                     Icon(
                         imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "LIVE",
+                        contentDescription = stringResource(R.string.live),
                         tint = Color.White
                     )
                 },
@@ -168,14 +174,14 @@ private fun EditorRecommendTitle(modifier: Modifier = Modifier) {
             .padding(horizontal = 20.dp),
     ) {
         Text(
-            text = "믿고 보는 웨이브 에디터 추천작",
+            text = stringResource(R.string.editor_recommend_title),
             fontSize = 20.sp,
             color = Color.White
         )
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-            contentDescription = "더보기",
+            contentDescription = stringResource(R.string.more),
             tint = Color.White,
         )
     }
@@ -185,7 +191,7 @@ private fun EditorRecommendTitle(modifier: Modifier = Modifier) {
 private fun TodayTop20Title(modifier: Modifier = Modifier) {
     Text(
         modifier = modifier.padding(horizontal = 20.dp),
-        text = "오늘의 TOP 20",
+        text = stringResource(R.string.today_top_20_title),
         fontSize = 20.sp,
         color = Color.White
     )

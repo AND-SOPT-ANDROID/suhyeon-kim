@@ -183,7 +183,7 @@ fun EditorRecommendBox(topData: TodayTopData, modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(id = topData.painterId),
-            contentDescription = "에디터 추천작",
+            contentDescription = stringResource(R.string.editor_recommended_work),
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),
@@ -201,7 +201,7 @@ fun TodayTop20Box(topData: TodayTopData, modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(id = topData.painterId),
-            contentDescription = "Top 20 이미지",
+            contentDescription = stringResource(R.string.today_top),
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),
