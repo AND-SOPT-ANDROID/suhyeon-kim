@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
-import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.presentation.utils.AuthKey.DEFAULT_NAME
+import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.MyViewModel
 
 @Composable

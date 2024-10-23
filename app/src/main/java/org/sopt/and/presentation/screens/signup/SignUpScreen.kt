@@ -115,7 +115,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 Text(
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(color = Color.White)) {
-                            append(stringResource(R.string.wavve_Enjoy))
+                            append(stringResource(R.string.wavve_enjoy))
                         }
                         withStyle(style = SpanStyle(color = Color.Gray)) {
                             append(stringResource(R.string.able))
