@@ -4,14 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import org.sopt.and.presentation.screens.Routes
+import org.sopt.and.presentation.screens.login.LoginScreen
+import org.sopt.and.presentation.screens.mypage.MyScreen
+import org.sopt.and.presentation.screens.signup.SignUpScreen
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.viewmodel.LoginViewModel
+import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.viewmodel.SignUpViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +22,22 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ANDANDROIDTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.SignUp.screen,
+                ) {
+                    composable(Routes.Login.screen) {
+                        LoginScreen(navController = navController, viewModel = LoginViewModel())
+                    }
+                    composable(Routes.SignUp.screen) {
+                        SignUpScreen(navController = navController, viewModel = SignUpViewModel())
+                    }
+                    composable(Routes.My.screen) {
+                        MyScreen(navController = navController, viewModel = MyViewModel())
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ANDANDROIDTheme {
-        Greeting("Android")
     }
 }

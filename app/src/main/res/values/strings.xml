@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">AND-ANDROID</string>
+
+    <!--    dialog-->
+    <string name="dialog_no_valid_email">유효한 이메일 형식이 아닙니다.</string>
+    <string name="dialog_no_valid_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다.</string>
+
+    <string name="back">뒤로가기</string>
+    <string name="wavve_logo">wavve 로고</string>
+    <string name="email_or_id">이메일 주소 또는 아이디</string>
+    <string name="login">로그인</string>
+    <string name="password">비밀번호</string>
+    <string name="hide">hide</string>
+    <string name="show">show</string>
+    <string name="find_id">아이디 찾기</string>
+    <string name="reset_password">비밀번호 재설정</string>
+    <string name="sign_up">회원가입</string>
+    <string name="social_description">또는 다른 서비스 계정으로 로그인</string>
+    <string name="social_info">SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요</string>
+
+    <string name="profile">프로필</string>
+    <string name="notifications">알림</string>
+    <string name="settings">설정</string>
+    <string name="first_buy_benefit">첫 결제 시 첫 달 100원!</string>
+    <string name="buy">구매하기</string>
+    <string name="no_ticket">현재 보유하신 이용권이 없습니다.</string>
+    <string name="viewing_history">전체 시청내역</string>
+    <string name="no_viewing_history">시청내역이 없어요.</string>
+    <string name="interested_program">관심 프로그램</string>
+    <string name="no_interested_program">관심 프로그램이 없어요.</string>
+
+    <string name="placeholder_email">wavve@example.com</string>
+    <string name="helper_text_email">로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해주세요.</string>
+    <string name="placeholder_password">Wavve 비밀번호 설정</string>
+    <string name="helper_text_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.</string>
+    <string name="sign_up_button">Wavve 회원가입</string>
+    <string name="ok">확인</string>
+    <string name="info">도움말</string>
+    <string name="social_description_2">또는 다른 서비스 계정으로 가입</string>
+
+    <string name="email_and_password">이메일과 비밀번호</string>
+    <string name="only">만으로</string>
+    <string name="wavve_enjoy">Wavve를 즐길 수</string>
+    <string name="able"> 있어요!</string>
+    <string name="fail_to_login">로그인에 실패했습니다.</string>
+    <string name="welcome">환영합니다!</string>
+
 </resources>
