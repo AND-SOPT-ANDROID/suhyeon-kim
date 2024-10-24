@@ -52,7 +52,7 @@ fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel())
         ) {
             Column {
                 //프로필 박스
-                ProfileBox(viewModel)
+                ProfileBox(modifier = Modifier, viewModel)
 
                 Spacer(modifier = Modifier.height(1.dp))
 

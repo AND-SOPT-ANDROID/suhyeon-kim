@@ -63,9 +63,16 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
         stringResource(R.string.overseas_series)
     )
 
-    val dummy = List(20) {
+    val editorDummy = List(20) {
         TodayTopData(
-            painterId = R.drawable.ic_launcher_background,
+            painterId = R.drawable.iv_editor_recommended_work,
+            ranking = it + 1
+        )
+    }
+
+    val top20Dummy = List(20) {
+        TodayTopData(
+            painterId = R.drawable.iv_today_top_20,
             ranking = it + 1
         )
     }
@@ -130,7 +137,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp),
                 ) {
-                    items(items = dummy, key = { it.ranking }) { item ->
+                    items(items = editorDummy, key = { it.ranking }) { item ->
                         EditorRecommendBox(topData = item, modifier = Modifier)
                     }
                 }
@@ -140,7 +147,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp)
                 ) {
-                    items(items = dummy, key = { it.ranking }) { item ->
+                    items(items = top20Dummy, key = { it.ranking }) { item ->
                         TodayTop20Box(topData = item, modifier = Modifier.padding(bottom = 90.dp))
                     }
                 }

@@ -35,7 +35,7 @@ fun Banner(pagerState: PagerState, modifier: Modifier = Modifier) {
             .padding(top = 10.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.iv_banner),
             contentDescription = stringResource(R.string.home_banner),
             modifier = Modifier
                 .fillMaxSize()

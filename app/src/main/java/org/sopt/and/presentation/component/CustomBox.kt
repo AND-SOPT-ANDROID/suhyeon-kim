@@ -45,9 +45,9 @@ import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
-fun ProfileBox(viewModel: MyViewModel = viewModel()) {
+fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray25)
             .padding(vertical = 20.dp)
@@ -110,9 +110,9 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
 }
 
 @Composable
-fun TicketBox() {
+fun TicketBox(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray25)
             .padding(top = 5.dp, bottom = 15.dp)
