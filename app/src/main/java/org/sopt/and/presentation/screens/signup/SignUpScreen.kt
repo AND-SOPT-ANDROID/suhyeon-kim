@@ -26,6 +26,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,22 +46,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.presentation.component.AuthTextField
 import org.sopt.and.presentation.component.ErrorDialog
 import org.sopt.and.presentation.component.SocialLoginButtonGroup
 import org.sopt.and.presentation.screens.Routes
-import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.presentation.utils.noRippleClickable
+import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -132,10 +137,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    value = viewModel.email,
+                    value = email,
                     onValueChange = {
-                        viewModel.email = it
-                        viewModel.validateInputs() //검증
+                        email = it
+                        viewModel.validateInputs(email, password) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_email),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -169,10 +174,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    value = viewModel.password,
+                    value = password,
                     onValueChange = {
-                        viewModel.password = it
-                        viewModel.validateInputs() //검증
+                        password = it
+                        viewModel.validateInputs(email, password) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -231,12 +236,14 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         .fillMaxWidth()
                         .background(color = WavveTheme.colors.Gray71)
                         .noRippleClickable {
-                            viewModel.validateInputs() //검증
+                            viewModel.validateInputs(email = email, password = password) //검증
                             if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
                                 //검증 성공
                                 viewModel.showDialog.value = false
 
                                 //회원가입 정보 저장
+                                viewModel.changeEmail(email)
+                                viewModel.changePassword(password)
                                 navController.navigate(Routes.Login.screen) {
                                     popUpTo(Routes.Login.screen) { inclusive = true }
                                 }

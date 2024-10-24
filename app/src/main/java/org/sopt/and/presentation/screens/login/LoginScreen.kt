@@ -33,8 +33,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -56,14 +59,14 @@ import org.sopt.and.R
 import org.sopt.and.presentation.component.AuthTextField
 import org.sopt.and.presentation.component.SocialLoginButtonGroup
 import org.sopt.and.presentation.screens.Routes
-import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.presentation.utils.noRippleClickable
-import org.sopt.and.viewmodel.LoginViewModel
+import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.viewmodel.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(navController: NavController, viewModel: SignUpViewModel) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
@@ -72,6 +75,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     val snackbarHostState = remember { SnackbarHostState() }
 
     val myViewModel: MyViewModel = viewModel()
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -124,9 +130,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = viewModel.email,
+                    value = email,
                     onValueChange = {
-                        viewModel.email = it
+                        email = it
                     },
                     placeholder = stringResource(R.string.email_or_id),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -144,9 +150,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = viewModel.password,
+                    value = password,
                     onValueChange = {
-                        viewModel.password = it
+                        password = it
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -184,8 +190,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                     ),
                     shape = RoundedCornerShape(size = 50.dp),
                     onClick = {
-
-                        if (viewModel.email == "localEmail" && viewModel.password == "localPassword") {
+                        if (email == viewModel.email && password == viewModel.password) {
                             //로그인 성공
                             myViewModel.setUserEmail(viewModel.email)
                             navController.navigate(Routes.Home.screen) {

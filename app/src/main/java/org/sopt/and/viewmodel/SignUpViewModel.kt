@@ -9,7 +9,19 @@ import org.sopt.and.presentation.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpViewModel : ViewModel() {
     var email by mutableStateOf("")
+        private set
+
+    fun changeEmail(newEmail: String) {
+        email = newEmail
+    }
+
     var password by mutableStateOf("")
+        private set
+
+    fun changePassword(newPassword: String) {
+        password = newPassword
+    }
+
     val showPassword = mutableStateOf(false)
 
     var emailErrorMsg by mutableStateOf("")
@@ -19,7 +31,7 @@ class SignUpViewModel : ViewModel() {
     private val regex = Regex(PASSWORD_PATTERN)
 
     // 이메일 및 비밀번호 검증 함수
-    fun validateInputs() {
+    fun validateInputs(email: String, password: String) {
         emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             "유효한 이메일 형식이 아닙니다."
         } else {

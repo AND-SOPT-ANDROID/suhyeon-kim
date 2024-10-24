@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -45,7 +46,6 @@ import org.sopt.and.presentation.screens.search.SearchScreen
 import org.sopt.and.presentation.screens.signup.SignUpScreen
 import org.sopt.and.presentation.utils.noRippleClickable
 import org.sopt.and.ui.theme.ANDANDROIDTheme
-import org.sopt.and.viewmodel.LoginViewModel
 import org.sopt.and.viewmodel.MyViewModel
 import org.sopt.and.viewmodel.SignUpViewModel
 
@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                 val selected = remember {
                     mutableStateOf("홈")
                 }
+                val signUpViewModel: SignUpViewModel = viewModel()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -134,17 +135,17 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.Home.screen,
+                        startDestination = Routes.Login.screen,
                     ) {
                         composable(Routes.Login.screen) {
                             isBottomAppBarVisible = false
-                            LoginScreen(navController = navController, viewModel = LoginViewModel())
+                            LoginScreen(navController = navController, viewModel = signUpViewModel)
                         }
                         composable(Routes.SignUp.screen) {
                             isBottomAppBarVisible = false
                             SignUpScreen(
                                 navController = navController,
-                                viewModel = SignUpViewModel()
+                                viewModel = signUpViewModel
                             )
                         }
                         composable(Routes.Home.screen) {
