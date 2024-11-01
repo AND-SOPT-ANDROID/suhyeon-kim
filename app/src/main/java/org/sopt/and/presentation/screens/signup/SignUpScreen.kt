@@ -216,10 +216,10 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
 }
 
 @Composable
-fun WavveToolTip(description: String) {
+fun WavveToolTip(description: String, modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = Modifier.padding(horizontal = 20.dp)
+        modifier = modifier.padding(horizontal = 20.dp)
     ) {
         Icon(
             Icons.Outlined.Info,

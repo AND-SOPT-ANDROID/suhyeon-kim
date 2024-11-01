@@ -36,11 +36,13 @@ import org.sopt.and.viewmodel.MyViewModel
 import org.sopt.and.viewmodel.SignUpViewModel
 
 @Composable
-fun BuyGuideButton(subTitle: String) {
+fun BuyGuideButton(
+    subTitle: String, modifier: Modifier = Modifier
+) {
     Text(
         subTitle,
         color = Color.Gray,
-        modifier = Modifier.padding(start = 20.dp)
+        modifier = modifier.padding(start = 20.dp)
     )
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -60,10 +62,11 @@ fun WavveSignUpButton(
     viewModel: SignUpViewModel,
     email: String,
     password: String,
-    navController: NavController
+    navController: NavController,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray71)
             .noRippleClickable {
@@ -117,10 +120,11 @@ fun WavveLoginButton(
     scope: CoroutineScope,
     snackbarHostState: SnackbarHostState,
     context: Context,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    modifier: Modifier = Modifier
 ) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
