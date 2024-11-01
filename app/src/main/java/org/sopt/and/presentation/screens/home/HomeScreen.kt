@@ -36,46 +36,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.data.model.TodayTopData
 import org.sopt.and.presentation.component.Banner
 import org.sopt.and.presentation.component.EditorRecommendBox
 import org.sopt.and.presentation.component.TodayTop20Box
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val scrollState = rememberScrollState()
     val pagerState = rememberPagerState(
         pageCount = { 6 }
     )
-
-    val homeTabText = listOf(
-        stringResource(R.string.new_classic),
-        stringResource(R.string.drama),
-        stringResource(R.string.variety_show),
-        stringResource(R.string.movie),
-        stringResource(R.string.animation),
-        stringResource(R.string.overseas_series)
-    )
-
-    val editorDummy = List(20) {
-        TodayTopData(
-            painterId = R.drawable.iv_editor_recommended_work,
-            ranking = it + 1
-        )
-    }
-
-    val top20Dummy = List(20) {
-        TodayTopData(
-            painterId = R.drawable.iv_today_top_20,
-            ranking = it + 1
-        )
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -117,7 +92,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                TabTitle(homeTabText)
+                TabTitle(viewModel.homeTabText)
 
                 HorizontalPager(
                     modifier = Modifier
@@ -137,7 +112,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp),
                 ) {
-                    items(items = editorDummy, key = { it.ranking }) { item ->
+                    items(items = viewModel.editorDummy, key = { it.ranking }) { item ->
                         EditorRecommendBox(topData = item, modifier = Modifier)
                     }
                 }
@@ -147,7 +122,7 @@ fun HomeScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp)
                 ) {
-                    items(items = top20Dummy, key = { it.ranking }) { item ->
+                    items(items = viewModel.top20Dummy, key = { it.ranking }) { item ->
                         TodayTop20Box(topData = item, modifier = Modifier.padding(bottom = 90.dp))
                     }
                 }

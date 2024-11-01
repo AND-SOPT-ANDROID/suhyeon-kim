@@ -46,10 +46,12 @@ import org.sopt.and.presentation.screens.search.SearchScreen
 import org.sopt.and.presentation.screens.signup.SignUpScreen
 import org.sopt.and.presentation.utils.noRippleClickable
 import org.sopt.and.ui.theme.ANDANDROIDTheme
+import org.sopt.and.viewmodel.HomeViewModel
 import org.sopt.and.viewmodel.MyViewModel
 import org.sopt.and.viewmodel.SignUpViewModel
 
 class MainActivity : ComponentActivity() {
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +73,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.height(110.dp),
                                 containerColor = Color.Black,
                             ) {
+
                                 NavItem(
                                     icon = {
                                         Icon(
@@ -150,7 +153,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.Home.screen) {
                             isBottomAppBarVisible = true
-                            HomeScreen(navController = navController, viewModel = MyViewModel())
+                            HomeScreen(navController = navController, viewModel = HomeViewModel())
                         }
                         composable(Routes.Search.screen) {
                             isBottomAppBarVisible = true
