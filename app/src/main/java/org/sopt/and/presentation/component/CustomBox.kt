@@ -88,23 +88,7 @@ fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                stringResource(R.string.first_buy_benefit),
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(start = 20.dp)
-            ) {
-                Text(stringResource(R.string.buy), color = Color.White)
-                Icon(
-                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.buy),
-                    tint = Color.White
-                )
-            }
+            BuyGuideButton(stringResource(R.string.first_buy_benefit))
         }
     }
 }
@@ -117,24 +101,7 @@ fun TicketBox(modifier: Modifier = Modifier) {
             .background(color = WavveTheme.colors.Gray25)
             .padding(top = 5.dp, bottom = 15.dp)
     ) {
-        Column {
-            Text(
-                stringResource(R.string.no_ticket),
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(start = 20.dp)
-            ) {
-                Text(stringResource(R.string.buy), color = Color.White)
-                Icon(
-                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.buy),
-                    tint = Color.White
-                )
-            }
-        }
+        BuyGuideButton(stringResource(R.string.no_ticket))
     }
 }
 

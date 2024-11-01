@@ -41,6 +41,7 @@ import org.sopt.and.R
 import org.sopt.and.presentation.component.Banner
 import org.sopt.and.presentation.component.EditorRecommendBox
 import org.sopt.and.presentation.component.TodayTop20Box
+import org.sopt.and.presentation.component.WavveTabBar
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.HomeViewModel
 
@@ -92,7 +93,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                TabTitle(viewModel.homeTabText)
+                WavveTabBar(viewModel.homeTabText)
 
                 HorizontalPager(
                     modifier = Modifier
@@ -127,24 +128,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun TabTitle(homeTabText: List<String>, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        homeTabText.forEach { tab ->
-            Text(
-                text = tab,
-                fontSize = 18.sp,
-                color = Color.Gray
-            )
         }
     }
 }

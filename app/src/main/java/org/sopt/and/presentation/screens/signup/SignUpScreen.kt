@@ -51,6 +51,7 @@ import org.sopt.and.R
 import org.sopt.and.presentation.component.AuthTextField
 import org.sopt.and.presentation.component.ErrorDialog
 import org.sopt.and.presentation.component.SocialLoginButtonGroup
+import org.sopt.and.presentation.component.WavveSignUpButton
 import org.sopt.and.presentation.screens.Routes
 import org.sopt.and.presentation.utils.noRippleClickable
 import org.sopt.and.ui.theme.WavveTheme
@@ -155,17 +156,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.info),
-                        tint = Color.Gray,
-                    )
-                    Text(stringResource(R.string.helper_text_email), color = Color.Gray)
-                }
+                WavveToolTip(stringResource(R.string.helper_text_email))
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -205,20 +196,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.info),
-                        tint = Color.Gray,
-                    )
-                    Text(
-                        stringResource(R.string.helper_text_password),
-                        color = Color.Gray
-                    )
-                }
+                WavveToolTip(stringResource(R.string.helper_text_password))
 
                 Spacer(modifier = Modifier.height(50.dp))
 
@@ -231,50 +209,23 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                 Spacer(modifier = Modifier.weight(1f))
 
                 //회원가입 버튼
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = WavveTheme.colors.Gray71)
-                        .noRippleClickable {
-                            viewModel.validateInputs(email = email, password = password) //검증
-                            if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
-                                //검증 성공
-                                viewModel.showDialog.value = false
-
-                                //회원가입 정보 저장
-                                viewModel.changeEmail(email)
-                                viewModel.changePassword(password)
-                                navController.navigate(Routes.Login.screen) {
-                                    popUpTo(Routes.Login.screen) { inclusive = true }
-                                }
-                            } else {
-                                //검증 실패
-                                viewModel.showDialog.value = true
-                            }
-                        },
-                ) {
-                    Text(
-                        stringResource(R.string.sign_up_button),
-                        modifier = Modifier
-                            .padding(vertical = 18.dp)
-                            .align(Alignment.Center),
-                        color = Color.White,
-                        fontSize = 18.sp,
-                    )
-
-                    if (viewModel.showDialog.value) {
-                        ErrorDialog(
-                            showDialog = viewModel.showDialog,
-                            isEmailError = viewModel.emailErrorMsg,
-                            isPasswordError = viewModel.passwordErrorMsg,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White)
-                        )
-                    }
-                }
+                WavveSignUpButton(viewModel, email, password, navController)
             }
         }
+    }
+}
+
+@Composable
+fun WavveToolTip(description: String) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.padding(horizontal = 20.dp)
+    ) {
+        Icon(
+            Icons.Outlined.Info,
+            contentDescription = stringResource(R.string.info),
+            tint = Color.Gray,
+        )
+        Text(description, color = Color.Gray)
     }
 }

@@ -61,7 +61,7 @@ fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
             ) {
 
                 repeat(5) {
-                    SocialLoginButton(
+                    WavveSocialLoginButton(
                         painterId = R.drawable.ic_apple,
                         modifier = Modifier
                             .size(50.dp)
@@ -88,7 +88,7 @@ fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SocialLoginButton(@DrawableRes painterId: Int, modifier: Modifier = Modifier) {
+fun WavveSocialLoginButton(@DrawableRes painterId: Int, modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(id = painterId),
         contentDescription = null,
