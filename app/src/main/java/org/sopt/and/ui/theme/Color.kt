@@ -9,6 +9,7 @@ class WavveColors(
     val Gray71: Color = Color(0xFF717171),
     val Gray2F: Color = Color(0xFF2F2F2F),
     val Gray25: Color = Color(0xFF252525),
+    val Gray16: Color = Color(0xFF161616),
 
     //Blue
     val VividBlue: Color = Color(0xFF1353FA),

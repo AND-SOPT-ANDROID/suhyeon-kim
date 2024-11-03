@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Info
@@ -23,23 +26,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
+import org.sopt.and.data.model.TodayTopData
 import org.sopt.and.presentation.utils.AuthKey.DEFAULT_NAME
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
-fun ProfileBox(viewModel: MyViewModel = viewModel()) {
+fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray25)
             .padding(vertical = 20.dp)
@@ -102,9 +110,9 @@ fun ProfileBox(viewModel: MyViewModel = viewModel()) {
 }
 
 @Composable
-fun TicketBox() {
+fun TicketBox(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray25)
             .padding(top = 5.dp, bottom = 15.dp)
@@ -162,6 +170,58 @@ fun EmptyBox(title: String, subTitle: String, modifier: Modifier = Modifier) {
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 10.dp),
             textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun EditorRecommendBox(topData: TodayTopData, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(width = 110.dp, height = 160.dp)
+            .padding(top = 10.dp)
+    ) {
+        Image(
+            painter = painterResource(id = topData.painterId),
+            contentDescription = stringResource(R.string.editor_recommended_work),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(10.dp)),
+            contentScale = ContentScale.Crop
+        )
+    }
+}
+
+@Composable
+fun TodayTop20Box(topData: TodayTopData, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(width = 190.dp, height = 290.dp)
+            .padding(top = 10.dp)
+    ) {
+        Image(
+            painter = painterResource(id = topData.painterId),
+            contentDescription = stringResource(R.string.today_top),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(10.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            text = topData.ranking.toString(),
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .offset(x = 10.dp, y = 30.dp),
+            fontSize = 50.sp,
+            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black,
+                    blurRadius = 4f,
+                    offset = Offset(x = 2f, y = 2f)
+                )
+            )
         )
     }
 }
