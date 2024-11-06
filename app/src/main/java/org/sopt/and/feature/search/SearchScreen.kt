@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.search
+package org.sopt.and.feature.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.feature.mypage.MyViewModel
 
 @Composable
 fun SearchScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {

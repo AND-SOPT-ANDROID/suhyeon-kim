@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -29,11 +29,11 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
-import org.sopt.and.presentation.screens.Routes
-import org.sopt.and.presentation.utils.noRippleClickable
+import org.sopt.and.feature.main.Routes
+import org.sopt.and.utils.noRippleClickable
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
-import org.sopt.and.viewmodel.SignUpViewModel
+import org.sopt.and.feature.mypage.MyViewModel
+import org.sopt.and.feature.signup.SignUpViewModel
 
 @Composable
 fun BuyGuideButton(

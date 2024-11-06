@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.data.model.TodayTopData
-import org.sopt.and.presentation.utils.AuthKey.DEFAULT_NAME
+import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.feature.mypage.MyViewModel
 
 @Composable
 fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {

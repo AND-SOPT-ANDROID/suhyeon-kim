@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.home
+package org.sopt.and.feature.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,12 +38,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.presentation.component.Banner
-import org.sopt.and.presentation.component.EditorRecommendBox
-import org.sopt.and.presentation.component.TodayTop20Box
-import org.sopt.and.presentation.component.WavveTabBar
+import org.sopt.and.core.designsystem.component.Banner
+import org.sopt.and.core.designsystem.component.EditorRecommendBox
+import org.sopt.and.core.designsystem.component.TodayTop20Box
+import org.sopt.and.core.designsystem.component.WavveTabBar
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package org.sopt.and.viewmodel
+package org.sopt.and.feature.mypage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

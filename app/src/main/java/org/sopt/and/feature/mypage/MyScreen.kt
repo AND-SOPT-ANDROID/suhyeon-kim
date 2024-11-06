@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.mypage
+package org.sopt.and.feature.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,11 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.presentation.component.EmptyBox
-import org.sopt.and.presentation.component.ProfileBox
-import org.sopt.and.presentation.component.TicketBox
+import org.sopt.and.core.designsystem.component.EmptyBox
+import org.sopt.and.core.designsystem.component.ProfileBox
+import org.sopt.and.core.designsystem.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
 fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {

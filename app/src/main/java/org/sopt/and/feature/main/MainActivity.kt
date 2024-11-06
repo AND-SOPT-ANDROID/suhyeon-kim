@@ -1,4 +1,4 @@
-package org.sopt.and
+package org.sopt.and.feature.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -38,17 +38,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.sopt.and.presentation.screens.Routes
-import org.sopt.and.presentation.screens.home.HomeScreen
-import org.sopt.and.presentation.screens.login.LoginScreen
-import org.sopt.and.presentation.screens.mypage.MyScreen
-import org.sopt.and.presentation.screens.search.SearchScreen
-import org.sopt.and.presentation.screens.signup.SignUpScreen
-import org.sopt.and.presentation.utils.noRippleClickable
+import org.sopt.and.R
+import org.sopt.and.feature.home.HomeScreen
+import org.sopt.and.feature.login.LoginScreen
+import org.sopt.and.feature.mypage.MyScreen
+import org.sopt.and.feature.search.SearchScreen
+import org.sopt.and.feature.signup.SignUpScreen
+import org.sopt.and.utils.noRippleClickable
 import org.sopt.and.ui.theme.ANDANDROIDTheme
-import org.sopt.and.viewmodel.HomeViewModel
-import org.sopt.and.viewmodel.MyViewModel
-import org.sopt.and.viewmodel.SignUpViewModel
+import org.sopt.and.feature.home.HomeViewModel
+import org.sopt.and.feature.mypage.MyViewModel
+import org.sopt.and.feature.signup.SignUpViewModel
 
 class MainActivity : ComponentActivity() {
 

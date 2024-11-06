@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

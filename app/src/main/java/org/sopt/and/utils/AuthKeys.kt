@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.utils
+package org.sopt.and.utils
 
 object AuthKey {
     const val EMAIL = "email"
