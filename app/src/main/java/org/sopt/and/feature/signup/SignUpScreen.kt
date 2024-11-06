@@ -26,9 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
@@ -43,21 +41,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveSignUpButton
-import org.sopt.and.utils.noRippleClickable
+import org.sopt.and.feature.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email.observeAsState("")
+    val password by viewModel.password.observeAsState("")
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -134,7 +134,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                         .padding(horizontal = 20.dp),
                     value = email,
                     onValueChange = {
-                        email = it
+                        viewModel.changeEmail(it)
                         viewModel.validateInputs(email, password) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_email),
@@ -161,7 +161,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                         .padding(horizontal = 20.dp),
                     value = password,
                     onValueChange = {
-                        password = it
+                        viewModel.changePassword(it)
                         viewModel.validateInputs(email, password) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_password),
@@ -203,7 +203,26 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                 Spacer(modifier = Modifier.weight(1f))
 
                 //회원가입 버튼
-                WavveSignUpButton(viewModel, email, password, navController)
+                WavveSignUpButton(
+                    viewModel,
+                    onClick = {
+                        viewModel.validateInputs(email = email, password = password) //검증
+                        if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
+                            //검증 성공
+                            viewModel.showDialog.value = false
+
+                            //회원가입 정보 저장
+                            viewModel.changeEmail(email)
+                            viewModel.changePassword(password)
+                            navController.navigate(Routes.Login.screen) {
+                                popUpTo(Routes.Login.screen) { inclusive = true }
+                            }
+                        } else {
+                            //검증 실패
+                            viewModel.showDialog.value = true
+                        }
+                    }
+                )
             }
         }
     }

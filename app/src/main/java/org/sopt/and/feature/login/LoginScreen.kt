@@ -31,10 +31,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -51,19 +50,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveLoginButton
 import org.sopt.and.feature.main.Routes
-import org.sopt.and.utils.noRippleClickable
-import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.feature.mypage.MyViewModel
-import org.sopt.and.feature.signup.SignUpViewModel
+import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
@@ -72,8 +71,8 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     val myViewModel: MyViewModel = viewModel()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val email by viewModel.email.observeAsState("")
+    val password by viewModel.password.observeAsState("")
 
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -129,7 +128,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                         .fillMaxWidth(),
                     value = email,
                     onValueChange = {
-                        email = it
+                        viewModel.changeEmail(it)
                     },
                     placeholder = stringResource(R.string.email_or_id),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -149,7 +148,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                         .fillMaxWidth(),
                     value = password,
                     onValueChange = {
-                        password = it
+                        viewModel.changePassword(it)
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -179,15 +178,23 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
 
                 //기본 로그인 버튼
                 WavveLoginButton(
-                    email,
-                    viewModel,
-                    password,
-                    myViewModel,
-                    navController,
-                    scope,
-                    snackbarHostState,
-                    context,
-                    focusManager
+                    onClick = {
+                        if (email == viewModel.email.value && password == viewModel.password.value) {
+                            //로그인 성공
+                            myViewModel.setUserEmail(viewModel.email.value!!)
+                            navController.navigate(Routes.Home.screen) {
+                                popUpTo(Routes.Home.screen) { inclusive = true }
+                            }
+                        } else {
+                            //로그인 실패
+                            scope.launch {
+                                snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
+                            }
+                        }
+
+                        //키보드 내리기
+                        focusManager.clearFocus()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

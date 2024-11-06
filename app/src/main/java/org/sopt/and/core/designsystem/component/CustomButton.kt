@@ -1,6 +1,5 @@
 package org.sopt.and.core.designsystem.component
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,26 +13,19 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.sopt.and.R
-import org.sopt.and.feature.main.Routes
-import org.sopt.and.utils.noRippleClickable
-import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.feature.mypage.MyViewModel
 import org.sopt.and.feature.signup.SignUpViewModel
+import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.noRippleClickable
 
 @Composable
 fun BuyGuideButton(
@@ -60,9 +52,7 @@ fun BuyGuideButton(
 @Composable
 fun WavveSignUpButton(
     viewModel: SignUpViewModel,
-    email: String,
-    password: String,
-    navController: NavController,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -70,21 +60,7 @@ fun WavveSignUpButton(
             .fillMaxWidth()
             .background(color = WavveTheme.colors.Gray71)
             .noRippleClickable {
-                viewModel.validateInputs(email = email, password = password) //검증
-                if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
-                    //검증 성공
-                    viewModel.showDialog.value = false
-
-                    //회원가입 정보 저장
-                    viewModel.changeEmail(email)
-                    viewModel.changePassword(password)
-                    navController.navigate(Routes.Login.screen) {
-                        popUpTo(Routes.Login.screen) { inclusive = true }
-                    }
-                } else {
-                    //검증 실패
-                    viewModel.showDialog.value = true
-                }
+                onClick()
             },
     ) {
         Text(
@@ -112,15 +88,7 @@ fun WavveSignUpButton(
 
 @Composable
 fun WavveLoginButton(
-    email: String,
-    viewModel: SignUpViewModel,
-    password: String,
-    myViewModel: MyViewModel,
-    navController: NavController,
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    context: Context,
-    focusManager: FocusManager,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
@@ -131,23 +99,7 @@ fun WavveLoginButton(
             containerColor = WavveTheme.colors.VividBlue
         ),
         shape = RoundedCornerShape(size = 50.dp),
-        onClick = {
-            if (email == viewModel.email && password == viewModel.password) {
-                //로그인 성공
-                myViewModel.setUserEmail(viewModel.email)
-                navController.navigate(Routes.Home.screen) {
-                    popUpTo(Routes.Home.screen) { inclusive = true }
-                }
-            } else {
-                //로그인 실패
-                scope.launch {
-                    snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
-                }
-            }
-
-            //키보드 내리기
-            focusManager.clearFocus()
-        },
+        onClick = onClick,
     ) {
         Text(
             text = stringResource(R.string.login),

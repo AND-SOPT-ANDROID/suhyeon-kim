@@ -4,31 +4,35 @@ import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpViewModel : ViewModel() {
-    var email by mutableStateOf("")
-        private set
+    private val _email = MutableLiveData("")
+    val email: LiveData<String> get() = _email
 
-    fun changeEmail(newEmail: String) {
-        email = newEmail
-    }
-
-    var password by mutableStateOf("")
-        private set
-
-    fun changePassword(newPassword: String) {
-        password = newPassword
-    }
+    private val _password = MutableLiveData("")
+    val password: LiveData<String> get() = _password
 
     val showPassword = mutableStateOf(false)
 
     var emailErrorMsg by mutableStateOf("")
+
     var passwordErrorMsg by mutableStateOf("")
 
     val showDialog = mutableStateOf(false)
+
     private val regex = Regex(PASSWORD_PATTERN)
+
+    fun changeEmail(newEmail: String) {
+        _email.value = newEmail
+    }
+
+    fun changePassword(newPassword: String) {
+        _password.value = newPassword
+    }
 
     // 이메일 및 비밀번호 검증 함수
     fun validateInputs(email: String, password: String) {
