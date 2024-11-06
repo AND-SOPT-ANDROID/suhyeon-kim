@@ -63,7 +63,7 @@ import org.sopt.and.feature.signup.SignUpViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, viewModel: SignUpViewModel) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher

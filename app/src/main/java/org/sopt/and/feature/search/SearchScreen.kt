@@ -15,7 +15,7 @@ import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.feature.mypage.MyViewModel
 
 @Composable
-fun SearchScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+fun SearchScreen(navController: NavController, viewModel: SearchViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
