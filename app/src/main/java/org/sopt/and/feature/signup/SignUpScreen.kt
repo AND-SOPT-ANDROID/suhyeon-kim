@@ -51,13 +51,16 @@ import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.ErrorDialog
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveSignUpButton
-import org.sopt.and.feature.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
+fun SignUpScreen(
+    navController: NavController,
+    onSignUpSuccess: (String, String) -> Unit,
+    viewModel: SignUpViewModel = viewModel()
+) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
     val context = LocalContext.current
@@ -210,22 +213,17 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                 //회원가입 버튼
                 WavveSignUpButton(
                     onClick = {
-                        viewModel.validateInputs(email = email, password = password, context = context) //검증
-                        if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
-                            //검증 성공
-                            viewModel.setDialogState(false)
-
-                            //회원가입 정보 저장
-                            viewModel.setEmail(email)
-                            viewModel.setPassword(password)
-                            navController.navigate(Routes.Login.screen) {
-                                popUpTo(Routes.Login.screen) { inclusive = true }
-                            }
-                        } else {
-                            //검증 실패
-                            viewModel.setDialogState(true)
-
-                        }
+                        viewModel.onSignUpClick(
+                            localEmail = email,
+                            localPassword = password,
+                            onSuccess = { email, password ->
+                                onSignUpSuccess(email, password)
+                            },
+                            onFailure = {
+                                //다이얼로그
+                            },
+                            context = context
+                        )
                     }
                 )
 

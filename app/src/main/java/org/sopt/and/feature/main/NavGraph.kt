@@ -1,6 +1,10 @@
 package org.sopt.and.feature.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,17 +25,37 @@ fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    var localEmail by remember { mutableStateOf("") }
+    var localPassword by remember { mutableStateOf("") }
+
     NavHost(
         navController = navController,
         startDestination = Routes.Login.screen,
         modifier = Modifier
     ) {
         composable(Routes.Login.screen) {
-            LoginScreen(navController = navController, viewModel = LoginViewModel())
+            LoginScreen(
+                localEmail = localEmail,
+                localPassword = localPassword,
+                navController = navController,
+                onLoginSuccess = { email, password ->
+                    navController.navigate(Routes.Home.screen) {
+                        popUpTo(Routes.Home.screen) { inclusive = true }
+                    }
+                },
+                viewModel = LoginViewModel()
+            )
         }
         composable(Routes.SignUp.screen) {
             SignUpScreen(
                 navController = navController,
+                onSignUpSuccess = { email, password ->
+                    localEmail = email
+                    localPassword = password
+                    navController.navigate(Routes.Login.screen) {
+                        popUpTo(Routes.Login.screen) { inclusive = true }
+                    }
+                },
                 viewModel = SignUpViewModel()
             )
         }

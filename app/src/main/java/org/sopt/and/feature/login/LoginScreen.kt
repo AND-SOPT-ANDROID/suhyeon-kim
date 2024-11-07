@@ -56,13 +56,18 @@ import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveLoginButton
 import org.sopt.and.feature.main.Routes
-import org.sopt.and.feature.mypage.MyViewModel
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(
+    localEmail: String,
+    localPassword: String,
+    navController: NavController,
+    onLoginSuccess: (String, String) -> Unit,
+    viewModel: LoginViewModel = viewModel()
+) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
@@ -70,7 +75,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val myViewModel: MyViewModel = viewModel()
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
 
@@ -128,7 +132,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         .fillMaxWidth(),
                     value = email,
                     onValueChange = {
-                        viewModel.changeEmail(it)
+                        viewModel.setEmail(it)
                     },
                     placeholder = stringResource(R.string.email_or_id),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -148,7 +152,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                         .fillMaxWidth(),
                     value = password,
                     onValueChange = {
-                        viewModel.changePassword(it)
+                        viewModel.setPassword(it)
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -179,18 +183,18 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
                 //기본 로그인 버튼
                 WavveLoginButton(
                     onClick = {
-                        if (email == viewModel.email.value && password == viewModel.password.value) {
-                            //로그인 성공
-                            myViewModel.setUserEmail(viewModel.email.value!!)
-                            navController.navigate(Routes.Home.screen) {
-                                popUpTo(Routes.Home.screen) { inclusive = true }
+                        viewModel.onLoginClick(
+                            localEmail = localEmail,
+                            localPassword = localPassword,
+                            onSuccess = { email, password ->
+                                onLoginSuccess(email, password)
+                            },
+                            onFailure = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
+                                }
                             }
-                        } else {
-                            //로그인 실패
-                            scope.launch {
-                                snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
-                            }
-                        }
+                        )
 
                         //키보드 내리기
                         focusManager.clearFocus()
