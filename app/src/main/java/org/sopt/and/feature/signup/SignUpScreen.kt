@@ -64,8 +64,10 @@ fun SignUpScreen(
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
     val context = LocalContext.current
+
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
+    val showDialog by viewModel.showDialog.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -220,14 +222,14 @@ fun SignUpScreen(
                                 onSignUpSuccess(email, password)
                             },
                             onFailure = {
-                                //다이얼로그
+                                viewModel.setDialogState(true)
                             },
                             context = context
                         )
                     }
                 )
 
-                if (viewModel.showDialog.value == true) {
+                if (showDialog) {
                     ErrorDialog(
                         onDismissRequest = {
                             viewModel.setDialogState(false)
