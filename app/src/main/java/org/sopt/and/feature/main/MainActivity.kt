@@ -7,8 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import org.sopt.and.ui.theme.ANDANDROIDTheme
@@ -28,15 +26,12 @@ class MainActivity : ComponentActivity() {
                     Routes.Search.screen,
                     Routes.My.screen,
                 )
-                val selected = remember {
-                    mutableStateOf("홈")
-                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         if (isBottomAppBarVisible) {
-                            BottomNavigationBar(selected, navController)
+                            BottomNavigationBar(navController)
                         }
                     }
                 ) {
