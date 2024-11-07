@@ -35,15 +35,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.data.model.TodayTopData
-import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.feature.mypage.MyViewModel
 
 @Composable
-fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {
+fun ProfileBox(userEmail: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -64,7 +61,7 @@ fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel
                 )
 
                 Text(
-                    text = viewModel.userEmail.value ?: DEFAULT_NAME,
+                    text = userEmail,
                     color = Color.White,
                     modifier = Modifier.padding(start = 10.dp)
                 )

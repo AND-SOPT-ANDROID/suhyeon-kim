@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">AND-ANDROID</string>
 
-    <!--    dialog-->
-    <string name="dialog_no_valid_email">유효한 이메일 형식이 아닙니다.</string>
-    <string name="dialog_no_valid_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다.</string>
-
     <!-- common -->
     <string name="back">뒤로가기</string>
     <string name="wavve_logo">wavve 로고</string>
@@ -34,6 +30,8 @@
     <string name="wavve_enjoy">Wavve를 즐길 수</string>
     <string name="able"> 있어요!</string>
     <string name="fail_to_login">로그인에 실패했습니다.</string>
+    <string name="invalid_email_address">유효한 이메일 형식이 아닙니다.</string>
+    <string name="invalid_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다.</string>
 
     <!-- Home -->
     <string name="welcome">환영합니다!</string>

@@ -1,5 +1,6 @@
 package org.sopt.and.feature.signup
 
+import android.content.Context
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.sopt.and.R
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 
 class SignUpViewModel : ViewModel() {
@@ -22,28 +24,33 @@ class SignUpViewModel : ViewModel() {
 
     var passwordErrorMsg by mutableStateOf("")
 
-    val showDialog = mutableStateOf(false)
+    private val _showDialog = MutableLiveData(false)
+    val showDialog: LiveData<Boolean> get() = _showDialog
 
     private val regex = Regex(PASSWORD_PATTERN)
 
-    fun changeEmail(newEmail: String) {
+    fun setEmail(newEmail: String) {
         _email.value = newEmail
     }
 
-    fun changePassword(newPassword: String) {
+    fun setPassword(newPassword: String) {
         _password.value = newPassword
     }
 
+    fun setDialogState(dialogState: Boolean) {
+        _showDialog.value = dialogState
+    }
+
     // 이메일 및 비밀번호 검증 함수
-    fun validateInputs(email: String, password: String) {
+    fun validateInputs(email: String, password: String, context: Context) {
         emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            "유효한 이메일 형식이 아닙니다."
+            context.getString(R.string.invalid_email_address)
         } else {
             ""
         }
 
         passwordErrorMsg = if (!isValidPassword(password)) {
-            "비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다."
+            context.getString(R.string.invalid_password)
         } else {
             ""
         }

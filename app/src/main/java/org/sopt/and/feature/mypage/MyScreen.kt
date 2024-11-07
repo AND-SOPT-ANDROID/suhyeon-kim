@@ -24,6 +24,7 @@ import org.sopt.and.core.designsystem.component.EmptyBox
 import org.sopt.and.core.designsystem.component.ProfileBox
 import org.sopt.and.core.designsystem.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
 fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
@@ -51,7 +52,10 @@ fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel())
         ) {
             Column {
                 //프로필 박스
-                ProfileBox(modifier = Modifier, viewModel)
+                ProfileBox(
+                    userEmail = viewModel.userEmail.value ?: DEFAULT_NAME,
+                    modifier = Modifier
+                )
 
                 Spacer(modifier = Modifier.height(1.dp))
 

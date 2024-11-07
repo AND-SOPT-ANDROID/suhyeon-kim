@@ -19,36 +19,29 @@ import org.sopt.and.feature.signup.SignUpViewModel
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    isBottomAppBarVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    var isBottomAppBarVisible1 = isBottomAppBarVisible
     NavHost(
         navController = navController,
         startDestination = Routes.Login.screen,
         modifier = Modifier
     ) {
         composable(Routes.Login.screen) {
-            isBottomAppBarVisible1 = false
             LoginScreen(navController = navController, viewModel = LoginViewModel())
         }
         composable(Routes.SignUp.screen) {
-            isBottomAppBarVisible1 = false
             SignUpScreen(
                 navController = navController,
                 viewModel = SignUpViewModel()
             )
         }
         composable(Routes.Home.screen) {
-            isBottomAppBarVisible1 = true
             HomeScreen(navController = navController, viewModel = HomeViewModel())
         }
         composable(Routes.Search.screen) {
-            isBottomAppBarVisible1 = true
             SearchScreen(navController = navController, viewModel = SearchViewModel())
         }
         composable(Routes.My.screen) {
-            isBottomAppBarVisible1 = true
             MyScreen(navController = navController, viewModel = MyViewModel())
         }
     }

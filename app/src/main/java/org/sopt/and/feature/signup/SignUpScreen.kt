@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,8 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -45,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
+import org.sopt.and.core.designsystem.component.ErrorDialog
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveSignUpButton
 import org.sopt.and.feature.main.Routes
@@ -56,6 +60,7 @@ import org.sopt.and.utils.noRippleClickable
 fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val context = LocalContext.current
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
 
@@ -134,8 +139,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         .padding(horizontal = 20.dp),
                     value = email,
                     onValueChange = {
-                        viewModel.changeEmail(it)
-                        viewModel.validateInputs(email, password) //검증
+                        viewModel.setEmail(it)
+                        viewModel.validateInputs(email, password, context) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_email),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -161,8 +166,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
                         .padding(horizontal = 20.dp),
                     value = password,
                     onValueChange = {
-                        viewModel.changePassword(it)
-                        viewModel.validateInputs(email, password) //검증
+                        viewModel.setPassword(it)
+                        viewModel.validateInputs(email, password, context) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -204,25 +209,42 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = view
 
                 //회원가입 버튼
                 WavveSignUpButton(
-                    viewModel,
                     onClick = {
-                        viewModel.validateInputs(email = email, password = password) //검증
+                        viewModel.validateInputs(email = email, password = password, context = context) //검증
                         if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
                             //검증 성공
-                            viewModel.showDialog.value = false
+                            viewModel.setDialogState(false)
 
                             //회원가입 정보 저장
-                            viewModel.changeEmail(email)
-                            viewModel.changePassword(password)
+                            viewModel.setEmail(email)
+                            viewModel.setPassword(password)
                             navController.navigate(Routes.Login.screen) {
                                 popUpTo(Routes.Login.screen) { inclusive = true }
                             }
                         } else {
                             //검증 실패
-                            viewModel.showDialog.value = true
+                            viewModel.setDialogState(true)
+
                         }
                     }
                 )
+
+                if (viewModel.showDialog.value == true) {
+                    ErrorDialog(
+                        onDismissRequest = {
+                            viewModel.setDialogState(false)
+                        },
+                        onClick = {
+                            viewModel.setDialogState(false)
+                        },
+                        isEmailError = viewModel.emailErrorMsg,
+                        isPasswordError = viewModel.passwordErrorMsg,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color.White)
+                    )
+                }
             }
         }
     }
