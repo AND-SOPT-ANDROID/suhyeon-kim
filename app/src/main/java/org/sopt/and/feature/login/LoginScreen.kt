@@ -77,7 +77,7 @@ fun LoginScreen(
 
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
-
+    val showPassword by viewModel.showPassword.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -94,7 +94,8 @@ fun LoginScreen(
                     IconButton(
                         onClick = {
                             dispatcher.onBackPressed()
-                        }) {
+                        }
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
                             contentDescription = stringResource(R.string.back),
@@ -126,7 +127,6 @@ fun LoginScreen(
             ) {
                 Spacer(modifier = Modifier.height(20.dp))
 
-                //이메일
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -146,7 +146,6 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                //비밀번호
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -157,12 +156,12 @@ fun LoginScreen(
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (viewModel.showPassword.value) stringResource(R.string.hide) else stringResource(
+                            if (showPassword) stringResource(R.string.hide) else stringResource(
                                 R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
-                                viewModel.showPassword.value = !viewModel.showPassword.value
+                                viewModel.setPasswordVisible()
                             },
                         )
                     },
@@ -175,7 +174,7 @@ fun LoginScreen(
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))

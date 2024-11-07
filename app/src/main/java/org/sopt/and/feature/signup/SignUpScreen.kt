@@ -67,6 +67,7 @@ fun SignUpScreen(
 
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
+    val showPassword by viewModel.showPassword.observeAsState(false)
     val showDialog by viewModel.showDialog.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -155,7 +156,7 @@ fun SignUpScreen(
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
-                    isError = if (viewModel.emailErrorMsg.isNotEmpty()) true else false,
+                    isError = viewModel.emailErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -164,7 +165,6 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                //비밀번호
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -177,13 +177,14 @@ fun SignUpScreen(
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (viewModel.showPassword.value) stringResource(R.string.hide) else stringResource(
+                            if (showPassword) stringResource(R.string.hide) else stringResource(
                                 R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
-                                viewModel.showPassword.value = !viewModel.showPassword.value
-                            })
+                                viewModel.setPasswordVisible()
+                            }
+                        )
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
@@ -194,8 +195,8 @@ fun SignUpScreen(
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = if (viewModel.passwordErrorMsg.isNotEmpty()) true else false
+                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                    isError = viewModel.passwordErrorMsg.isNotEmpty()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -204,7 +205,6 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                //소셜 로그인
                 SocialLoginButtonGroup(
                     stringResource(R.string.social_description_2),
                     modifier = Modifier.padding(horizontal = 20.dp)
@@ -212,7 +212,6 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                //회원가입 버튼
                 WavveSignUpButton(
                     onClick = {
                         viewModel.onSignUpClick(

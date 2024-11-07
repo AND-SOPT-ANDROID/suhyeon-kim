@@ -20,7 +20,8 @@ class SignUpViewModel : ViewModel() {
     private val _password = MutableLiveData("")
     val password: LiveData<String> get() = _password
 
-    val showPassword = mutableStateOf(false)
+    private val _showPassword = MutableLiveData(false)
+    val showPassword: LiveData<Boolean> get() = _showPassword
 
     var emailErrorMsg by mutableStateOf("")
 
@@ -37,6 +38,10 @@ class SignUpViewModel : ViewModel() {
 
     fun setPassword(newPassword: String) {
         _password.value = newPassword
+    }
+
+    fun setPasswordVisible() {
+        _showPassword.value = _showPassword.value?.not()
     }
 
     fun setDialogState(dialogState: Boolean) {
