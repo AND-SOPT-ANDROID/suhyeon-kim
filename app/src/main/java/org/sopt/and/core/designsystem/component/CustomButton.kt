@@ -3,6 +3,7 @@ package org.sopt.and.core.designsystem.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,21 +30,23 @@ import org.sopt.and.utils.noRippleClickable
 fun BuyGuideButton(
     subTitle: String, modifier: Modifier = Modifier
 ) {
-    Text(
-        subTitle,
-        color = Color.Gray,
-        modifier = modifier.padding(start = 20.dp)
-    )
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier.padding(start = 20.dp)
-    ) {
-        Text(stringResource(R.string.buy), color = Color.White)
-        Icon(
-            Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-            contentDescription = stringResource(R.string.buy),
-            tint = Color.White
+    Column {
+        Text(
+            subTitle,
+            color = Color.Gray,
+            modifier = modifier.padding(start = 20.dp)
         )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = modifier.padding(start = 20.dp)
+        ) {
+            Text(stringResource(R.string.buy), color = Color.White)
+            Icon(
+                Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.buy),
+                tint = Color.White
+            )
+        }
     }
 }
 

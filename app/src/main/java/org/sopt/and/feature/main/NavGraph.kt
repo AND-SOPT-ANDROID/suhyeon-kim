@@ -66,7 +66,11 @@ fun NavGraph(
             SearchScreen(navController = navController, viewModel = SearchViewModel())
         }
         composable(Routes.My.screen) {
-            MyScreen(navController = navController, viewModel = MyViewModel())
+            MyScreen(
+                navController = navController,
+                localEmail = localEmail,
+                viewModel = MyViewModel()
+            )
         }
     }
 }

@@ -27,11 +27,14 @@ import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
-fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+fun MyScreen(
+    navController: NavController,
+    localEmail: String,
+    viewModel: MyViewModel = viewModel()
+) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    //화면 진입 시 snackBar 표시
     LaunchedEffect(Unit) {
         snackbarHostState.showSnackbar(context.getString(R.string.welcome))
     }
@@ -53,7 +56,7 @@ fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel())
             Column {
                 //프로필 박스
                 ProfileBox(
-                    userEmail = viewModel.userEmail.value ?: DEFAULT_NAME,
+                    userEmail = localEmail.ifEmpty { DEFAULT_NAME },
                     modifier = Modifier
                 )
 
