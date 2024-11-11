@@ -28,6 +28,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
@@ -67,7 +69,7 @@ fun SignUpScreen(
 
     val email by viewModel.email.observeAsState("")
     val password by viewModel.password.observeAsState("")
-    val showPassword by viewModel.showPassword.observeAsState(false)
+    val showPassword = remember { mutableStateOf(false) }
     val showDialog by viewModel.showDialog.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -177,12 +179,12 @@ fun SignUpScreen(
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (showPassword) stringResource(R.string.hide) else stringResource(
+                            if (showPassword.value) stringResource(R.string.hide) else stringResource(
                                 R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
-                                viewModel.setPasswordVisible()
+                                showPassword.value = !showPassword.value
                             }
                         )
                     },
@@ -195,7 +197,7 @@ fun SignUpScreen(
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = viewModel.passwordErrorMsg.isNotEmpty()
                 )
 

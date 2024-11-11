@@ -1,6 +1,5 @@
 package org.sopt.and.feature.login
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +13,6 @@ class LoginViewModel : ViewModel() {
     private val _password = MutableLiveData("")
     val password: LiveData<String> get() = _password
 
-    private val _showPassword = MutableLiveData(false)
-    val showPassword: LiveData<Boolean> get() = _showPassword
 
     fun setEmail(newEmail: String) {
         _email.value = newEmail
@@ -23,10 +20,6 @@ class LoginViewModel : ViewModel() {
 
     fun setPassword(newPassword: String) {
         _password.value = newPassword
-    }
-
-    fun setPasswordVisible() {
-        _showPassword.value = _showPassword.value?.not()
     }
 
     fun onLoginClick(
