@@ -1,5 +1,6 @@
 package org.sopt.and.feature.login
 
+import android.content.Context
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -73,6 +74,8 @@ fun LoginScreen(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -193,7 +196,10 @@ fun LoginScreen(
                                         username = "email",
                                         password = "password"
                                     )
-                                )
+                                ) { body ->
+                                    editor.putString("loginToken", body!!.result.token)
+                                    editor.apply()
+                                }
                                 onLoginSuccess(email, password)
                             },
                             onFailure = {

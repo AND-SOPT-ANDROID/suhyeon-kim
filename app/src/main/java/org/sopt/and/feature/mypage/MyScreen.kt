@@ -1,5 +1,6 @@
 package org.sopt.and.feature.mypage
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,10 +34,14 @@ fun MyScreen(
     viewModel: MyViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
+    val token = sharedPreferences.getString("loginToken", "none") ?: "none"
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         snackbarHostState.showSnackbar(context.getString(R.string.welcome))
+        viewModel.getUserHobby(token = token)
     }
 
     Scaffold(
@@ -56,7 +61,7 @@ fun MyScreen(
             Column {
                 //프로필 박스
                 ProfileBox(
-                    userEmail = localEmail.ifEmpty { DEFAULT_NAME },
+                    userEmail = viewModel.userState.value?.result?.hobby ?: DEFAULT_NAME,
                     modifier = Modifier
                 )
 

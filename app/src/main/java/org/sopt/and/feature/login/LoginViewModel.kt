@@ -21,7 +21,7 @@ class LoginViewModel : ViewModel() {
     private val _userState = mutableStateOf<ResponseUserTokenDto?>(null)
     val userState: State<ResponseUserTokenDto?> get() = _userState
 
-    fun postUserLogin(body: UserLoginRequest) {
+    fun postUserLogin(body: UserLoginRequest, callback: (ResponseUserTokenDto?) -> Unit) {
         userService.postUserLogin(
             body = body
         ).enqueue(object : Callback<ResponseUserTokenDto> {
@@ -31,16 +31,18 @@ class LoginViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     _userState.value = response.body()
-                    Log.d("postUserLogin", response.body().toString())
+                    callback(response.body())
 
                 } else {
                     val error = response.message()
                     Log.e("error", error.toString())
+                    callback(null)
                 }
             }
 
             override fun onFailure(call: Call<ResponseUserTokenDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
+                callback(null)
             }
         })
     }
