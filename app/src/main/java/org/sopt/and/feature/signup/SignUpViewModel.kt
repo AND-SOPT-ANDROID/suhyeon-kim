@@ -1,7 +1,9 @@
 package org.sopt.and.feature.signup
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,9 +13,43 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
+import org.sopt.and.data.ServicePool
+import org.sopt.and.data.model.dto.ResponseUserSignUpDto
+import org.sopt.and.data.model.request.UserSignUpRequest
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SignUpViewModel : ViewModel() {
+    private val userService by lazy { ServicePool.userService }
+
+    private val _userState = mutableStateOf<ResponseUserSignUpDto?>(null)
+    val userState: State<ResponseUserSignUpDto?> get() = _userState
+
+    fun postUserSignUp(body: UserSignUpRequest) {
+        userService.postUserSignUp(
+            body = body
+        ).enqueue(object : Callback<ResponseUserSignUpDto> {
+            override fun onResponse(
+                call: Call<ResponseUserSignUpDto>,
+                response: Response<ResponseUserSignUpDto>
+            ) {
+                if (response.isSuccessful) {
+                    _userState.value = response.body()
+                    Log.d("postUserSignUp", response.body().toString())
+
+                } else {
+                    val error = response.message()
+                    Log.e("error", error.toString())
+                }
+            }
+            override fun onFailure(call: Call<ResponseUserSignUpDto>, t: Throwable) {
+                Log.e("failure", t.message.toString())
+            }
+        })
+    }
+
     private val _email = MutableLiveData("")
     val email: LiveData<String> get() = _email
 
