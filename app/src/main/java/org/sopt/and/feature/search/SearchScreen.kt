@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.search
+package org.sopt.and.feature.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,10 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
-fun SearchScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+fun SearchScreen(navController: NavController, viewModel: SearchViewModel = viewModel()) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->

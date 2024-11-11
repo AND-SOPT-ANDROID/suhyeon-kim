@@ -1,8 +1,7 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
@@ -37,15 +35,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import org.sopt.and.R
 import org.sopt.and.data.model.TodayTopData
-import org.sopt.and.presentation.utils.AuthKey.DEFAULT_NAME
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
 
 @Composable
-fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel()) {
+fun ProfileBox(userEmail: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -66,7 +61,7 @@ fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel
                 )
 
                 Text(
-                    text = viewModel.userEmail.value ?: DEFAULT_NAME,
+                    text = userEmail,
                     color = Color.White,
                     modifier = Modifier.padding(start = 10.dp)
                 )
@@ -88,23 +83,7 @@ fun ProfileBox(modifier: Modifier = Modifier, viewModel: MyViewModel = viewModel
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                stringResource(R.string.first_buy_benefit),
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(start = 20.dp)
-            ) {
-                Text(stringResource(R.string.buy), color = Color.White)
-                Icon(
-                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.buy),
-                    tint = Color.White
-                )
-            }
+            BuyGuideButton(stringResource(R.string.first_buy_benefit))
         }
     }
 }
@@ -117,24 +96,7 @@ fun TicketBox(modifier: Modifier = Modifier) {
             .background(color = WavveTheme.colors.Gray25)
             .padding(top = 5.dp, bottom = 15.dp)
     ) {
-        Column {
-            Text(
-                stringResource(R.string.no_ticket),
-                color = Color.Gray,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(start = 20.dp)
-            ) {
-                Text(stringResource(R.string.buy), color = Color.White)
-                Icon(
-                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.buy),
-                    tint = Color.White
-                )
-            }
-        }
+        BuyGuideButton(stringResource(R.string.no_ticket))
     }
 }
 

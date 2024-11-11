@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.mypage
+package org.sopt.and.feature.mypage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,18 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.presentation.component.EmptyBox
-import org.sopt.and.presentation.component.ProfileBox
-import org.sopt.and.presentation.component.TicketBox
+import org.sopt.and.core.designsystem.component.EmptyBox
+import org.sopt.and.core.designsystem.component.ProfileBox
+import org.sopt.and.core.designsystem.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.MyViewModel
+import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
-fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
+fun MyScreen(
+    navController: NavController,
+    localEmail: String,
+    viewModel: MyViewModel = viewModel()
+) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    //화면 진입 시 snackBar 표시
     LaunchedEffect(Unit) {
         snackbarHostState.showSnackbar(context.getString(R.string.welcome))
     }
@@ -52,7 +55,10 @@ fun MyScreen(navController: NavController, viewModel: MyViewModel = viewModel())
         ) {
             Column {
                 //프로필 박스
-                ProfileBox(modifier = Modifier, viewModel)
+                ProfileBox(
+                    userEmail = localEmail.ifEmpty { DEFAULT_NAME },
+                    modifier = Modifier
+                )
 
                 Spacer(modifier = Modifier.height(1.dp))
 

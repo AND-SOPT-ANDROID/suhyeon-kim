@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,13 +19,14 @@ import org.sopt.and.R
 
 @Composable
 fun ErrorDialog(
-    showDialog: MutableState<Boolean>,
+    onDismissRequest: () -> Unit,
+    onClick: () -> Unit,
     isEmailError: String,
     isPasswordError: String,
     modifier: Modifier = Modifier
 ) {
     Dialog(
-        onDismissRequest = { showDialog.value = false }
+        onDismissRequest = onDismissRequest
     ) {
         Column(
             modifier = modifier,
@@ -49,7 +49,7 @@ fun ErrorDialog(
             Spacer(modifier = Modifier.height(36.dp))
             Button(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = { showDialog.value = false },
+                onClick = onClick,
                 enabled = true
             ) {
                 Text(stringResource(R.string.ok), color = Color.White)

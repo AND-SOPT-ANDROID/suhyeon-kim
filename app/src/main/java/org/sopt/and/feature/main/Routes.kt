@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens
+package org.sopt.and.feature.main
 
 sealed class Routes (val screen: String){
     object SignUp: Routes("signup")

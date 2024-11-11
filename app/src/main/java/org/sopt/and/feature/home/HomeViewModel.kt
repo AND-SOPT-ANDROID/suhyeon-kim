@@ -1,4 +1,4 @@
-package org.sopt.and.viewmodel
+package org.sopt.and.feature.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

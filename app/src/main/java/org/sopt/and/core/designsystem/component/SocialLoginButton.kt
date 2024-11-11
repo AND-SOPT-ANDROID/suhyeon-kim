@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.component
+package org.sopt.and.core.designsystem.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -22,9 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
+import org.sopt.and.utils.noRippleClickable
 
 @Composable
-fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
+fun SocialLoginButtonGroup(
+    title: String,
+    modifier: Modifier = Modifier
+) {
     //구분선
     Column(
         modifier = modifier
@@ -61,10 +65,12 @@ fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
             ) {
 
                 repeat(5) {
-                    SocialLoginButton(
+                    WavveSocialLoginButton(
                         painterId = R.drawable.ic_apple,
                         modifier = Modifier
-                            .size(50.dp)
+                            .size(50.dp),
+                        onClick = {
+                        }
                     )
                 }
             }
@@ -88,10 +94,17 @@ fun SocialLoginButtonGroup(title: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SocialLoginButton(@DrawableRes painterId: Int, modifier: Modifier = Modifier) {
+fun WavveSocialLoginButton(
+    @DrawableRes painterId: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Image(
         painter = painterResource(id = painterId),
         contentDescription = null,
         modifier = modifier
+            .noRippleClickable {
+                onClick()
+            }
     )
 }

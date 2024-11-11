@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.signup
+package org.sopt.and.feature.signup
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
@@ -27,14 +27,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -46,23 +46,31 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.presentation.component.AuthTextField
-import org.sopt.and.presentation.component.ErrorDialog
-import org.sopt.and.presentation.component.SocialLoginButtonGroup
-import org.sopt.and.presentation.screens.Routes
-import org.sopt.and.presentation.utils.noRippleClickable
+import org.sopt.and.core.designsystem.component.AuthTextField
+import org.sopt.and.core.designsystem.component.ErrorDialog
+import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
+import org.sopt.and.core.designsystem.component.WavveSignUpButton
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.SignUpViewModel
+import org.sopt.and.utils.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
+fun SignUpScreen(
+    navController: NavController,
+    onSignUpSuccess: (String, String) -> Unit,
+    viewModel: SignUpViewModel = viewModel()
+) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val email by viewModel.email.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+    val showPassword = remember { mutableStateOf(false) }
+    val showDialog by viewModel.showDialog.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -139,8 +147,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                         .padding(horizontal = 20.dp),
                     value = email,
                     onValueChange = {
-                        email = it
-                        viewModel.validateInputs(email, password) //검증
+                        viewModel.setEmail(it)
+                        viewModel.validateInputs(email, password, context) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_email),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -150,45 +158,35 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
-                    isError = if (viewModel.emailErrorMsg.isNotEmpty()) true else false,
+                    isError = viewModel.emailErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.info),
-                        tint = Color.Gray,
-                    )
-                    Text(stringResource(R.string.helper_text_email), color = Color.Gray)
-                }
+                WavveToolTip(stringResource(R.string.helper_text_email))
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                //비밀번호
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     value = password,
                     onValueChange = {
-                        password = it
-                        viewModel.validateInputs(email, password) //검증
+                        viewModel.setPassword(it)
+                        viewModel.validateInputs(email, password, context) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
                         Text(
-                            if (viewModel.showPassword.value) stringResource(R.string.hide) else stringResource(
+                            if (showPassword.value) stringResource(R.string.hide) else stringResource(
                                 R.string.show
                             ),
                             color = Color.White,
                             modifier = Modifier.noRippleClickable {
-                                viewModel.showPassword.value = !viewModel.showPassword.value
-                            })
+                                showPassword.value = !showPassword.value
+                            }
+                        )
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
@@ -199,30 +197,16 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
                             focusManager.clearFocus()
                         }
                     ),
-                    visualTransformation = if (viewModel.showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = if (viewModel.passwordErrorMsg.isNotEmpty()) true else false
+                    visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                    isError = viewModel.passwordErrorMsg.isNotEmpty()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Info,
-                        contentDescription = stringResource(R.string.info),
-                        tint = Color.Gray,
-                    )
-                    Text(
-                        stringResource(R.string.helper_text_password),
-                        color = Color.Gray
-                    )
-                }
+                WavveToolTip(stringResource(R.string.helper_text_password))
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                //소셜 로그인
                 SocialLoginButtonGroup(
                     stringResource(R.string.social_description_2),
                     modifier = Modifier.padding(horizontal = 20.dp)
@@ -230,51 +214,54 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                //회원가입 버튼
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = WavveTheme.colors.Gray71)
-                        .noRippleClickable {
-                            viewModel.validateInputs(email = email, password = password) //검증
-                            if (viewModel.emailErrorMsg.isEmpty() && viewModel.passwordErrorMsg.isEmpty()) {
-                                //검증 성공
-                                viewModel.showDialog.value = false
-
-                                //회원가입 정보 저장
-                                viewModel.changeEmail(email)
-                                viewModel.changePassword(password)
-                                navController.navigate(Routes.Login.screen) {
-                                    popUpTo(Routes.Login.screen) { inclusive = true }
-                                }
-                            } else {
-                                //검증 실패
-                                viewModel.showDialog.value = true
-                            }
-                        },
-                ) {
-                    Text(
-                        stringResource(R.string.sign_up_button),
-                        modifier = Modifier
-                            .padding(vertical = 18.dp)
-                            .align(Alignment.Center),
-                        color = Color.White,
-                        fontSize = 18.sp,
-                    )
-
-                    if (viewModel.showDialog.value) {
-                        ErrorDialog(
-                            showDialog = viewModel.showDialog,
-                            isEmailError = viewModel.emailErrorMsg,
-                            isPasswordError = viewModel.passwordErrorMsg,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White)
+                WavveSignUpButton(
+                    onClick = {
+                        viewModel.onSignUpClick(
+                            localEmail = email,
+                            localPassword = password,
+                            onSuccess = { email, password ->
+                                onSignUpSuccess(email, password)
+                            },
+                            onFailure = {
+                                viewModel.setDialogState(true)
+                            },
+                            context = context
                         )
                     }
+                )
+
+                if (showDialog) {
+                    ErrorDialog(
+                        onDismissRequest = {
+                            viewModel.setDialogState(false)
+                        },
+                        onClick = {
+                            viewModel.setDialogState(false)
+                        },
+                        isEmailError = viewModel.emailErrorMsg,
+                        isPasswordError = viewModel.passwordErrorMsg,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color.White)
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun WavveToolTip(description: String, modifier: Modifier = Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = modifier.padding(horizontal = 20.dp)
+    ) {
+        Icon(
+            Icons.Outlined.Info,
+            contentDescription = stringResource(R.string.info),
+            tint = Color.Gray,
+        )
+        Text(description, color = Color.Gray)
     }
 }

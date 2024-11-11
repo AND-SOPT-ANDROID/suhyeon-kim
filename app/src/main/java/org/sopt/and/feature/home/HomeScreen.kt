@@ -1,4 +1,4 @@
-package org.sopt.and.presentation.screens.home
+package org.sopt.and.feature.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,17 +36,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.presentation.component.Banner
-import org.sopt.and.presentation.component.EditorRecommendBox
-import org.sopt.and.presentation.component.TodayTop20Box
+import org.sopt.and.core.designsystem.component.Banner
+import org.sopt.and.core.designsystem.component.EditorRecommendBox
+import org.sopt.and.core.designsystem.component.TodayTop20Box
+import org.sopt.and.core.designsystem.component.WavveTabBar
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel()) {
     val scrollState = rememberScrollState()
     val pagerState = rememberPagerState(
         pageCount = { 6 }
@@ -92,7 +93,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                TabTitle(viewModel.homeTabText)
+                WavveTabBar(viewModel.homeTabText)
 
                 HorizontalPager(
                     modifier = Modifier
@@ -127,24 +128,6 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun TabTitle(homeTabText: List<String>, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        homeTabText.forEach { tab ->
-            Text(
-                text = tab,
-                fontSize = 18.sp,
-                color = Color.Gray
-            )
         }
     }
 }
