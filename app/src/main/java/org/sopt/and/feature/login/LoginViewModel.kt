@@ -63,18 +63,10 @@ class LoginViewModel : ViewModel() {
     }
 
     fun onLoginClick(
-        localName: String,
-        localPassword: String,
         onSuccess: (String, String) -> Unit,
-        onFailure: () -> Unit
     ) {
         viewModelScope.launch {
-            if (userName.value == localName && password.value == localPassword) {
-                //로그인 성공
                 onSuccess(userName.value!!, password.value!!)
-            } else {
-                onFailure()
-            }
         }
     }
 }

@@ -25,9 +25,6 @@ fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    var localEmail by remember { mutableStateOf("") }
-    var localPassword by remember { mutableStateOf("") }
-
     NavHost(
         navController = navController,
         startDestination = Routes.Login.screen,
@@ -35,10 +32,8 @@ fun NavGraph(
     ) {
         composable(Routes.Login.screen) {
             LoginScreen(
-                localEmail = localEmail,
-                localPassword = localPassword,
                 navController = navController,
-                onLoginSuccess = { email, password ->
+                onLoginSuccess = { name, password ->
                     navController.navigate(Routes.Home.screen) {
                         popUpTo(Routes.Home.screen) { inclusive = true }
                     }
@@ -49,9 +44,7 @@ fun NavGraph(
         composable(Routes.SignUp.screen) {
             SignUpScreen(
                 navController = navController,
-                onSignUpSuccess = { email, password ->
-                    localEmail = email
-                    localPassword = password
+                onSignUpSuccess = { name, password ->
                     navController.navigate(Routes.Login.screen) {
                         popUpTo(Routes.Login.screen) { inclusive = true }
                     }
@@ -68,7 +61,6 @@ fun NavGraph(
         composable(Routes.My.screen) {
             MyScreen(
                 navController = navController,
-                localEmail = localEmail,
                 viewModel = MyViewModel()
             )
         }

@@ -65,8 +65,6 @@ import org.sopt.and.utils.noRippleClickable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    localEmail: String,
-    localPassword: String,
     navController: NavController,
     onLoginSuccess: (String, String) -> Unit,
     viewModel: LoginViewModel = viewModel()
@@ -188,25 +186,18 @@ fun LoginScreen(
                 WavveLoginButton(
                     onClick = {
                         viewModel.onLoginClick(
-                            localName = localEmail,
-                            localPassword = localPassword,
                             onSuccess = { userName, password ->
                                 viewModel.postUserLogin(
                                     body = UserLoginRequest(
                                         username = userName,
                                         password = password
-                                    )
+                                    ),
                                 ) { body ->
                                     editor.putString("loginToken", body!!.result.token)
                                     editor.apply()
                                 }
                                 onLoginSuccess(userName, password)
                             },
-                            onFailure = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
-                                }
-                            }
                         )
 
                         //키보드 내리기

@@ -30,7 +30,6 @@ import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 @Composable
 fun MyScreen(
     navController: NavController,
-    localEmail: String,
     viewModel: MyViewModel = viewModel()
 ) {
     val context = LocalContext.current
