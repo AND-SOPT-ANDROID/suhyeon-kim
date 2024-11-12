@@ -149,7 +149,7 @@ fun SignUpScreen(
                     value = userName,
                     onValueChange = {
                         viewModel.setUserName(it)
-                        viewModel.validateInputs(userName, password, hobby, context) //검증
+                        viewModel.validateInputs(userName, password, hobby, context)
                     },
                     placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -175,7 +175,7 @@ fun SignUpScreen(
                     value = password,
                     onValueChange = {
                         viewModel.setPassword(it)
-                        viewModel.validateInputs(userName, password, hobby, context) //검증
+                        viewModel.validateInputs(userName, password, hobby, context)
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -213,6 +213,7 @@ fun SignUpScreen(
                     value = hobby,
                     onValueChange = {
                         viewModel.setHobby(it)
+                        viewModel.validateInputs(userName, password, hobby, context)
                     },
                     placeholder = stringResource(R.string.placeholder_hobby),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -224,6 +225,7 @@ fun SignUpScreen(
                             focusManager.clearFocus()
                         }
                     ),
+                    isError = viewModel.hobbyErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
