@@ -2,7 +2,6 @@ package org.sopt.and.feature.signup
 
 import android.content.Context
 import android.util.Log
-import android.util.Patterns
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,33 +43,43 @@ class SignUpViewModel : ViewModel() {
                     Log.e("error", error.toString())
                 }
             }
+
             override fun onFailure(call: Call<ResponseUserSignUpDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
             }
         })
     }
 
-    private val _email = MutableLiveData("")
-    val email: LiveData<String> get() = _email
+    private val _userName = MutableLiveData("")
+    val userName: LiveData<String> get() = _userName
 
     private val _password = MutableLiveData("")
     val password: LiveData<String> get() = _password
 
-    var emailErrorMsg by mutableStateOf("")
+    private val _hobby = MutableLiveData("")
+    val hobby: LiveData<String> get() = _hobby
+
+    var nameErrorMsg by mutableStateOf("")
 
     var passwordErrorMsg by mutableStateOf("")
+
+    var hobbyErrorMsg by mutableStateOf("")
 
     private val _showDialog = MutableLiveData(false)
     val showDialog: LiveData<Boolean> get() = _showDialog
 
     private val regex = Regex(PASSWORD_PATTERN)
 
-    fun setEmail(newEmail: String) {
-        _email.value = newEmail
+    fun setUserName(newName: String) {
+        _userName.value = newName
     }
 
     fun setPassword(newPassword: String) {
         _password.value = newPassword
+    }
+
+    fun setHobby(newHobby: String) {
+        _hobby.value = newHobby
     }
 
     fun setDialogState(dialogState: Boolean) {
@@ -78,21 +87,28 @@ class SignUpViewModel : ViewModel() {
     }
 
     fun onSignUpClick(
-        localEmail: String,
+        localName: String,
         localPassword: String,
-        onSuccess: (String, String) -> Unit,
+        localHobby: String,
+        onSuccess: (String, String, String) -> Unit,
         onFailure: () -> Unit,
         context: Context
     ) {
         viewModelScope.launch {
-            validateInputs(email = localEmail, password = localPassword, context = context) //검증
-            if (emailErrorMsg.isEmpty() && passwordErrorMsg.isEmpty()) {
+            validateInputs(
+                name = localName,
+                password = localPassword,
+                hobby = localHobby,
+                context = context
+            ) //검증
+            if (nameErrorMsg.isEmpty() && passwordErrorMsg.isEmpty() && hobbyErrorMsg.isEmpty()) {
                 setDialogState(false)
 
                 //회원가입 정보 저장
-                setEmail(localEmail)
+                setUserName(localName)
                 setPassword(localPassword)
-                onSuccess(email.value!!, password.value!!)
+                setHobby(localHobby)
+                onSuccess(userName.value!!, password.value!!, hobby.value!!)
             } else {
                 onFailure()
             }
@@ -100,15 +116,21 @@ class SignUpViewModel : ViewModel() {
     }
 
     // 이메일 및 비밀번호 검증 함수
-    fun validateInputs(email: String, password: String, context: Context) {
-        emailErrorMsg = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            context.getString(R.string.invalid_email_address)
+    fun validateInputs(name: String, password: String, hobby: String, context: Context) {
+        nameErrorMsg = if (name.length > 8) {
+            context.getString(R.string.invalid_user_name)
         } else {
             ""
         }
 
-        passwordErrorMsg = if (!isValidPassword(password)) {
+        passwordErrorMsg = if (password.length > 8) {
             context.getString(R.string.invalid_password)
+        } else {
+            ""
+        }
+
+        hobbyErrorMsg = if (hobby.length > 8) {
+            context.getString(R.string.invalid_hobby)
         } else {
             ""
         }

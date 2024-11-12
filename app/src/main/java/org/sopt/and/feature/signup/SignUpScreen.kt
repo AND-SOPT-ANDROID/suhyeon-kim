@@ -51,7 +51,6 @@ import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.ErrorDialog
-import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveSignUpButton
 import org.sopt.and.data.model.request.UserSignUpRequest
 import org.sopt.and.ui.theme.WavveTheme
@@ -68,8 +67,10 @@ fun SignUpScreen(
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
     val context = LocalContext.current
 
-    val email by viewModel.email.observeAsState("")
+    val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
+    val hobby by viewModel.hobby.observeAsState("")
+
     val showPassword = remember { mutableStateOf(false) }
     val showDialog by viewModel.showDialog.observeAsState(false)
 
@@ -141,17 +142,16 @@ fun SignUpScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                //이메일
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    value = email,
+                    value = userName,
                     onValueChange = {
-                        viewModel.setEmail(it)
-                        viewModel.validateInputs(email, password, context) //검증
+                        viewModel.setUserName(it)
+                        viewModel.validateInputs(userName, password, hobby, context) //검증
                     },
-                    placeholder = stringResource(R.string.placeholder_email),
+                    placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -159,12 +159,12 @@ fun SignUpScreen(
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
-                    isError = viewModel.emailErrorMsg.isNotEmpty(),
+                    isError = viewModel.nameErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                WavveToolTip(stringResource(R.string.helper_text_email))
+                WavveToolTip(stringResource(R.string.helper_text_user_name))
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -175,7 +175,7 @@ fun SignUpScreen(
                     value = password,
                     onValueChange = {
                         viewModel.setPassword(it)
-                        viewModel.validateInputs(email, password, context) //검증
+                        viewModel.validateInputs(userName, password, hobby, context) //검증
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -191,12 +191,10 @@ fun SignUpScreen(
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Next
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        }
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = viewModel.passwordErrorMsg.isNotEmpty()
@@ -206,29 +204,49 @@ fun SignUpScreen(
 
                 WavveToolTip(stringResource(R.string.helper_text_password))
 
-                Spacer(modifier = Modifier.height(50.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                SocialLoginButtonGroup(
-                    stringResource(R.string.social_description_2),
-                    modifier = Modifier.padding(horizontal = 20.dp)
+                AuthTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    value = hobby,
+                    onValueChange = {
+                        viewModel.setHobby(it)
+                    },
+                    placeholder = stringResource(R.string.placeholder_hobby),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                        }
+                    ),
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                WavveToolTip(stringResource(R.string.helper_text_hobby))
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 WavveSignUpButton(
                     onClick = {
                         viewModel.onSignUpClick(
-                            localEmail = email,
+                            localName = userName,
                             localPassword = password,
-                            onSuccess = { email, password ->
+                            localHobby = hobby,
+                            onSuccess = { userName, password, hobby ->
                                 viewModel.postUserSignUp(
                                     body = UserSignUpRequest(
-                                        username = "email",
-                                        password = "password",
-                                        hobby = "hobby"
+                                        username = userName,
+                                        password = password,
+                                        hobby = hobby
                                     )
                                 )
-                                onSignUpSuccess(email, password)
+                                onSignUpSuccess(userName, password)
                             },
                             onFailure = {
                                 viewModel.setDialogState(true)
@@ -246,8 +264,9 @@ fun SignUpScreen(
                         onClick = {
                             viewModel.setDialogState(false)
                         },
-                        isEmailError = viewModel.emailErrorMsg,
+                        isEmailError = viewModel.nameErrorMsg,
                         isPasswordError = viewModel.passwordErrorMsg,
+                        isHobbyError = viewModel.hobbyErrorMsg,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(20.dp))

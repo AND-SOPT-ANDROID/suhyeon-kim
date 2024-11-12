@@ -23,6 +23,7 @@ fun ErrorDialog(
     onClick: () -> Unit,
     isEmailError: String,
     isPasswordError: String,
+    isHobbyError: String,
     modifier: Modifier = Modifier
 ) {
     Dialog(

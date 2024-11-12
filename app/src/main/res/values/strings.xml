@@ -20,18 +20,22 @@
     <string name="reset_password">비밀번호 재설정</string>
     <string name="social_description">또는 다른 서비스 계정으로 로그인</string>
     <string name="social_info">SNS계정으로 간편하게 가입하여 서비스를 이용하실 수 있습니다.\n기존 POOQ 계정 또는 Wavve 계정과는 연동되지 않으니 이용에 참고하세요</string>
-    <string name="placeholder_email">wavve@example.com</string>
+    <string name="placeholder_user_name">Wavve 사용자 이름 설정</string>
     <string name="placeholder_password">Wavve 비밀번호 설정</string>
-    <string name="helper_text_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용하여 입력해 주세요.</string>
-    <string name="helper_text_email">로그인, 비밀번호 찾기, 알림에 사용되니 정확한 이메일을 입력해주세요.</string>
+    <string name="helper_text_password">비밀번호는 8자 이하로 입력해 주세요.</string>
+    <string name="helper_text_user_name">사용자 이름은 8자 이하로 입력해 주세요.</string>
     <string name="social_description_2">또는 다른 서비스 계정으로 가입</string>
     <string name="email_and_password">이메일과 비밀번호</string>
     <string name="only">만으로</string>
     <string name="wavve_enjoy">Wavve를 즐길 수</string>
     <string name="able"> 있어요!</string>
     <string name="fail_to_login">로그인에 실패했습니다.</string>
-    <string name="invalid_email_address">유효한 이메일 형식이 아닙니다.</string>
-    <string name="invalid_password">비밀번호는 8~20자 이내로 영문 대소문자, 숫자, 특수문자 중 3가지 이상 혼용해야 합니다.</string>
+    <string name="invalid_user_name">사용자 이름은 8자 이하여야 합니다.</string>
+    <string name="invalid_password">비밀번호는 8자 이하여야 합니다.</string>
+    <string name="invalid_hobby">취미는 8자 이하여야 합니다.</string>
+    <string name="helper_text_hobby">취미는 8자 이하로 입력해 주세요.</string>
+    <string name="placeholder_hobby">Wavve 사용자 취미 설정</string>
+
 
     <!-- Home -->
     <string name="welcome">환영합니다!</string>
