@@ -47,15 +47,15 @@ class LoginViewModel : ViewModel() {
         })
     }
 
-    private val _email = MutableLiveData("")
-    val email: LiveData<String> get() = _email
+    private val _userName = MutableLiveData("")
+    val userName: LiveData<String> get() = _userName
 
     private val _password = MutableLiveData("")
     val password: LiveData<String> get() = _password
 
 
-    fun setEmail(newEmail: String) {
-        _email.value = newEmail
+    fun setUserName(newName: String) {
+        _userName.value = newName
     }
 
     fun setPassword(newPassword: String) {
@@ -63,15 +63,15 @@ class LoginViewModel : ViewModel() {
     }
 
     fun onLoginClick(
-        localEmail: String,
+        localName: String,
         localPassword: String,
         onSuccess: (String, String) -> Unit,
         onFailure: () -> Unit
     ) {
         viewModelScope.launch {
-            if (email.value == localEmail && password.value == localPassword) {
+            if (userName.value == localName && password.value == localPassword) {
                 //로그인 성공
-                onSuccess(email.value!!, password.value!!)
+                onSuccess(userName.value!!, password.value!!)
             } else {
                 onFailure()
             }

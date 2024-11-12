@@ -80,7 +80,7 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val email by viewModel.email.observeAsState("")
+    val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
     val showPassword = remember { mutableStateOf(false) }
 
@@ -135,11 +135,11 @@ fun LoginScreen(
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = email,
+                    value = userName,
                     onValueChange = {
-                        viewModel.setEmail(it)
+                        viewModel.setUserName(it)
                     },
-                    placeholder = stringResource(R.string.email_or_id),
+                    placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -188,19 +188,19 @@ fun LoginScreen(
                 WavveLoginButton(
                     onClick = {
                         viewModel.onLoginClick(
-                            localEmail = localEmail,
+                            localName = localEmail,
                             localPassword = localPassword,
-                            onSuccess = { email, password ->
+                            onSuccess = { userName, password ->
                                 viewModel.postUserLogin(
                                     body = UserLoginRequest(
-                                        username = "email",
-                                        password = "password"
+                                        username = userName,
+                                        password = password
                                     )
                                 ) { body ->
                                     editor.putString("loginToken", body!!.result.token)
                                     editor.apply()
                                 }
-                                onLoginSuccess(email, password)
+                                onLoginSuccess(userName, password)
                             },
                             onFailure = {
                                 scope.launch {
