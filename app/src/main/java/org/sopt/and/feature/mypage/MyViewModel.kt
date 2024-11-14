@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.model.dto.ResponseUserHobbyDto
+import org.sopt.and.data.model.response.ResponseUserHobbyDto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

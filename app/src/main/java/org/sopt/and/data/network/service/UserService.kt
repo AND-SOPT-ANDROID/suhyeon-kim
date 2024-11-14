@@ -1,8 +1,8 @@
 package org.sopt.and.data.network.service
 
-import org.sopt.and.data.model.dto.ResponseUserHobbyDto
-import org.sopt.and.data.model.dto.ResponseUserSignUpDto
-import org.sopt.and.data.model.dto.ResponseUserTokenDto
+import org.sopt.and.data.model.response.ResponseUserHobbyDto
+import org.sopt.and.data.model.response.ResponseUserSignUpDto
+import org.sopt.and.data.model.response.ResponseUserTokenDto
 import org.sopt.and.data.model.request.UserLoginRequest
 import org.sopt.and.data.model.request.UserSignUpRequest
 import retrofit2.Call

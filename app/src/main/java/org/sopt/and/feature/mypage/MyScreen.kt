@@ -31,7 +31,7 @@ fun MyScreen(
 ) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
-    val token = sharedPreferences.getString("loginToken", "none") ?: "none"
+    val token = sharedPreferences.getString("loginToken", "").orEmpty()
 
     viewModel.getUserHobby(token = token)
 

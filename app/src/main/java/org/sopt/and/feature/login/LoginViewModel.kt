@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.model.dto.ResponseUserTokenDto
+import org.sopt.and.data.model.response.ResponseUserTokenDto
 import org.sopt.and.data.model.request.UserLoginRequest
 import org.sopt.and.utils.toast
 import retrofit2.Call

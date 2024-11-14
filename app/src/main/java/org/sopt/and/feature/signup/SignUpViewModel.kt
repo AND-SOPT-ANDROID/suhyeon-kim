@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.model.dto.ResponseUserSignUpDto
+import org.sopt.and.data.model.response.ResponseUserSignUpDto
 import org.sopt.and.data.model.request.UserSignUpRequest
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 import retrofit2.Call
