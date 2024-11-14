@@ -13,6 +13,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +27,6 @@ import org.sopt.and.core.designsystem.component.EmptyBox
 import org.sopt.and.core.designsystem.component.ProfileBox
 import org.sopt.and.core.designsystem.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
 fun MyScreen(
@@ -36,11 +37,14 @@ fun MyScreen(
     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
     val token = sharedPreferences.getString("loginToken", "none") ?: "none"
 
+    viewModel.getUserHobby(token = token)
+
+    val hobby by viewModel.hobby.observeAsState("")
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         snackbarHostState.showSnackbar(context.getString(R.string.welcome))
-        viewModel.getUserHobby(token = token)
     }
 
     Scaffold(
@@ -60,7 +64,7 @@ fun MyScreen(
             Column {
                 //프로필 박스
                 ProfileBox(
-                    userEmail = viewModel.userState.value?.result?.hobby ?: DEFAULT_NAME,
+                    userEmail = hobby,
                     modifier = Modifier
                 )
 

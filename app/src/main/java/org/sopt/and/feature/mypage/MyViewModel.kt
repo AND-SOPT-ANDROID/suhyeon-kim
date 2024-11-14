@@ -18,6 +18,9 @@ class MyViewModel : ViewModel() {
     private val _userState = mutableStateOf<ResponseUserHobbyDto?>(null)
     val userState: State<ResponseUserHobbyDto?> get() = _userState
 
+    private val _hobby = MutableLiveData("")
+    val hobby: LiveData<String> get() = _hobby
+
     fun getUserHobby(token: String) {
         userService.getUserHobby(token = token)
             .enqueue(object : Callback<ResponseUserHobbyDto> {
@@ -27,6 +30,7 @@ class MyViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         _userState.value = response.body()
+                        _hobby.value = response.body()?.result?.hobby
                         Log.d("getUserHobby", response.body().toString())
 
                     } else {
@@ -41,10 +45,4 @@ class MyViewModel : ViewModel() {
             })
     }
 
-    private var _userEmail = MutableLiveData("")
-    val userEmail: LiveData<String> get() = _userEmail
-
-    fun setUserEmail(userEmail: String) {
-        _userEmail.value = userEmail
-    }
 }
