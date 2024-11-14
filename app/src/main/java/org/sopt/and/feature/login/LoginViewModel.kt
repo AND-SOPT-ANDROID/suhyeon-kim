@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.sopt.and.R
 import org.sopt.and.data.ServicePool
 import org.sopt.and.data.model.dto.ResponseUserTokenDto
 import org.sopt.and.data.model.request.UserLoginRequest
@@ -42,13 +43,13 @@ class LoginViewModel : ViewModel() {
                 } else {
                     val error = response.message()
                     Log.e("error", error.toString())
-                    context.toast("로그인에 실패했습니다.")
+                    context.toast(context.getString(R.string.fail_to_login))
                 }
             }
 
             override fun onFailure(call: Call<ResponseUserTokenDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
-                context.toast("로그인에 실패했습니다.")
+                context.toast(context.getString(R.string.fail_to_login))
             }
         })
     }

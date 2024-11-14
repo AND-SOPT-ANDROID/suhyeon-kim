@@ -46,6 +46,7 @@ fun NavGraph(
 
 
         composable(Routes.Login.screen) {
+            isLoggedIn = false
             LoginScreen(
                 navController = navController,
                 onLoginSuccess = { name, password ->
