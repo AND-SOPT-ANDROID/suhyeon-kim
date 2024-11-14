@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
@@ -188,6 +187,7 @@ fun LoginScreen(
                         viewModel.onLoginClick(
                             onSuccess = { userName, password ->
                                 viewModel.postUserLogin(
+                                    context = context,
                                     body = UserLoginRequest(
                                         username = userName,
                                         password = password
@@ -195,8 +195,8 @@ fun LoginScreen(
                                 ) { body ->
                                     editor.putString("loginToken", body!!.result.token)
                                     editor.apply()
+                                    onLoginSuccess(userName, password)
                                 }
-                                onLoginSuccess(userName, password)
                             },
                         )
 

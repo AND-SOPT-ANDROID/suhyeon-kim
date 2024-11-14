@@ -1,5 +1,6 @@
 package org.sopt.and.feature.login
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.sopt.and.data.ServicePool
 import org.sopt.and.data.model.dto.ResponseUserTokenDto
 import org.sopt.and.data.model.request.UserLoginRequest
+import org.sopt.and.utils.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +23,11 @@ class LoginViewModel : ViewModel() {
     private val _userState = mutableStateOf<ResponseUserTokenDto?>(null)
     val userState: State<ResponseUserTokenDto?> get() = _userState
 
-    fun postUserLogin(body: UserLoginRequest, callback: (ResponseUserTokenDto?) -> Unit) {
+    fun postUserLogin(
+        context: Context,
+        body: UserLoginRequest,
+        callback: (ResponseUserTokenDto?) -> Unit
+    ) {
         userService.postUserLogin(
             body = body
         ).enqueue(object : Callback<ResponseUserTokenDto> {
@@ -36,13 +42,13 @@ class LoginViewModel : ViewModel() {
                 } else {
                     val error = response.message()
                     Log.e("error", error.toString())
-                    callback(null)
+                    context.toast("로그인에 실패했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<ResponseUserTokenDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
-                callback(null)
+                context.toast("로그인에 실패했습니다.")
             }
         })
     }
@@ -66,7 +72,7 @@ class LoginViewModel : ViewModel() {
         onSuccess: (String, String) -> Unit,
     ) {
         viewModelScope.launch {
-                onSuccess(userName.value!!, password.value!!)
+            onSuccess(userName.value!!, password.value!!)
         }
     }
 }
