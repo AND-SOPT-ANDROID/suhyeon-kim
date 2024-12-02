@@ -36,8 +36,6 @@ class SignUpViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     _userState.value = response.body()
-                    Log.d("postUserSignUp", response.body().toString())
-
                 } else {
                     val error = response.message()
                     Log.e("error", error.toString())

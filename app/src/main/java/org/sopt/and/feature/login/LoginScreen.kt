@@ -184,7 +184,7 @@ fun LoginScreen(
                                         password = password
                                     ),
                                 ) { body ->
-                                    editor.putString("loginToken", body!!.result.token)
+                                    editor.putString(context.getString(R.string.login_token), body!!.result.token)
                                     editor.apply()
                                     onLoginSuccess(userName, password)
                                 }

@@ -31,8 +31,6 @@ class MyViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         _userState.value = response.body()
                         _hobby.value = response.body()?.result?.hobby
-                        Log.d("getUserHobby", response.body().toString())
-
                     } else {
                         val error = response.message()
                         Log.e("error", error.toString())
