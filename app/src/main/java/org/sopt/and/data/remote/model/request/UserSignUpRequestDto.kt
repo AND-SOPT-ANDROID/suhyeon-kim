@@ -1,11 +1,11 @@
-package org.sopt.and.data.model.request
+package org.sopt.and.data.remote.model.request
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserSignUpRequest(
+data class UserSignUpRequestDto(
     @SerialName("username")
     val username: String,
     @SerialName("password")

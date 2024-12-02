@@ -1,17 +1,17 @@
-package org.sopt.and.data.model.response
+package org.sopt.and.data.remote.model.response
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUserTokenDto(
+data class UserHobbyResponseDto(
     @SerialName("result")
     val result: Result
 ) {
     @Serializable
     data class Result(
-        @SerialName("token")
-        val token: String
+        @SerialName("hobby")
+        val hobby: String
     )
 }

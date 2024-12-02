@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.model.response.ResponseUserTokenDto
-import org.sopt.and.data.model.request.UserLoginRequest
+import org.sopt.and.data.remote.model.response.UserTokenResponseDto
+import org.sopt.and.data.remote.model.request.UserLoginRequestDto
 import org.sopt.and.utils.toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,20 +21,20 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
     private val userService by lazy { ServicePool.userService }
 
-    private val _userState = mutableStateOf<ResponseUserTokenDto?>(null)
-    val userState: State<ResponseUserTokenDto?> get() = _userState
+    private val _userState = mutableStateOf<UserTokenResponseDto?>(null)
+    val userState: State<UserTokenResponseDto?> get() = _userState
 
     fun postUserLogin(
         context: Context,
-        body: UserLoginRequest,
-        callback: (ResponseUserTokenDto?) -> Unit
+        body: UserLoginRequestDto,
+        callback: (UserTokenResponseDto?) -> Unit
     ) {
         userService.postUserLogin(
             body = body
-        ).enqueue(object : Callback<ResponseUserTokenDto> {
+        ).enqueue(object : Callback<UserTokenResponseDto> {
             override fun onResponse(
-                call: Call<ResponseUserTokenDto>,
-                response: Response<ResponseUserTokenDto>
+                call: Call<UserTokenResponseDto>,
+                response: Response<UserTokenResponseDto>
             ) {
                 if (response.isSuccessful) {
                     _userState.value = response.body()
@@ -47,7 +47,7 @@ class LoginViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<ResponseUserTokenDto>, t: Throwable) {
+            override fun onFailure(call: Call<UserTokenResponseDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
                 context.toast(context.getString(R.string.fail_to_login))
             }

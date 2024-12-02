@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import org.sopt.and.R
-import org.sopt.and.data.model.TodayTopData
+import org.sopt.and.data.remote.model.TodayTopData
 
 class HomeViewModel : ViewModel() {
     private val _homeTabText = listOf(

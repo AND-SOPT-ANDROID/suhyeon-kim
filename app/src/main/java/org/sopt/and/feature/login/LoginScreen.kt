@@ -53,7 +53,7 @@ import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveLoginButton
-import org.sopt.and.data.model.request.UserLoginRequest
+import org.sopt.and.data.remote.model.request.UserLoginRequestDto
 import org.sopt.and.feature.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
@@ -179,7 +179,7 @@ fun LoginScreen(
                             onSuccess = { userName, password ->
                                 viewModel.postUserLogin(
                                     context = context,
-                                    body = UserLoginRequest(
+                                    body = UserLoginRequestDto(
                                         username = userName,
                                         password = password
                                     ),

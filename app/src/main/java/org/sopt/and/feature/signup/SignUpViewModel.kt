@@ -13,8 +13,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.model.response.ResponseUserSignUpDto
-import org.sopt.and.data.model.request.UserSignUpRequest
+import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
+import org.sopt.and.data.remote.model.request.UserSignUpRequestDto
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,16 +23,16 @@ import retrofit2.Response
 class SignUpViewModel : ViewModel() {
     private val userService by lazy { ServicePool.userService }
 
-    private val _userState = mutableStateOf<ResponseUserSignUpDto?>(null)
-    val userState: State<ResponseUserSignUpDto?> get() = _userState
+    private val _userState = mutableStateOf<UserSignUpResponseDto?>(null)
+    val userState: State<UserSignUpResponseDto?> get() = _userState
 
-    fun postUserSignUp(body: UserSignUpRequest) {
+    fun postUserSignUp(body: UserSignUpRequestDto) {
         userService.postUserSignUp(
             body = body
-        ).enqueue(object : Callback<ResponseUserSignUpDto> {
+        ).enqueue(object : Callback<UserSignUpResponseDto> {
             override fun onResponse(
-                call: Call<ResponseUserSignUpDto>,
-                response: Response<ResponseUserSignUpDto>
+                call: Call<UserSignUpResponseDto>,
+                response: Response<UserSignUpResponseDto>
             ) {
                 if (response.isSuccessful) {
                     _userState.value = response.body()
@@ -44,7 +44,7 @@ class SignUpViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<ResponseUserSignUpDto>, t: Throwable) {
+            override fun onFailure(call: Call<UserSignUpResponseDto>, t: Throwable) {
                 Log.e("failure", t.message.toString())
             }
         })

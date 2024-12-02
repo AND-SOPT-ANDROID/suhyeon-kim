@@ -52,7 +52,7 @@ import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.ErrorDialog
 import org.sopt.and.core.designsystem.component.WavveSignUpButton
-import org.sopt.and.data.model.request.UserSignUpRequest
+import org.sopt.and.data.remote.model.request.UserSignUpRequestDto
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
 
@@ -242,7 +242,7 @@ fun SignUpScreen(
                             localHobby = hobby,
                             onSuccess = { userName, password, hobby ->
                                 viewModel.postUserSignUp(
-                                    body = UserSignUpRequest(
+                                    body = UserSignUpRequestDto(
                                         username = userName,
                                         password = password,
                                         hobby = hobby
