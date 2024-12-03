@@ -1,5 +1,6 @@
 package org.sopt.and.feature.login
 
+import android.content.Context
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,8 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
@@ -34,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -51,11 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.core.designsystem.component.AuthTextField
 import org.sopt.and.core.designsystem.component.SocialLoginButtonGroup
 import org.sopt.and.core.designsystem.component.WavveLoginButton
+import org.sopt.and.data.remote.model.request.UserLoginRequestDto
 import org.sopt.and.feature.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
@@ -63,24 +61,24 @@ import org.sopt.and.utils.noRippleClickable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    localEmail: String,
-    localPassword: String,
     navController: NavController,
     onLoginSuccess: (String, String) -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher ?: return
+    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
 
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
 
-    val email by viewModel.email.observeAsState("")
+    val token by viewModel.token.observeAsState("")
+    val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
     val showPassword = remember { mutableStateOf(false) }
 
-    Scaffold(modifier = Modifier.fillMaxSize(),
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -109,11 +107,6 @@ fun LoginScreen(
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = WavveTheme.colors.BackgroundGray)
             )
         },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
-        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -131,11 +124,11 @@ fun LoginScreen(
                 AuthTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = email,
+                    value = userName,
                     onValueChange = {
-                        viewModel.setEmail(it)
+                        viewModel.setUserName(it)
                     },
-                    placeholder = stringResource(R.string.email_or_id),
+                    placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -183,19 +176,17 @@ fun LoginScreen(
                 //기본 로그인 버튼
                 WavveLoginButton(
                     onClick = {
-                        viewModel.onLoginClick(
-                            localEmail = localEmail,
-                            localPassword = localPassword,
-                            onSuccess = { email, password ->
-                                onLoginSuccess(email, password)
-                            },
-                            onFailure = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(context.getString(R.string.fail_to_login))
-                                }
-                            }
+                        viewModel.postUserLogin(
+                            context = context,
+                            body = UserLoginRequestDto(
+                                username = userName,
+                                password = password
+                            ),
                         )
 
+                        editor.putString(context.getString(R.string.login_token), token)
+                        editor.apply()
+                        onLoginSuccess(userName, password)
                         //키보드 내리기
                         focusManager.clearFocus()
                     }

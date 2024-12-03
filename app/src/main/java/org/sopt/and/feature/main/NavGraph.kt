@@ -1,14 +1,17 @@
 package org.sopt.and.feature.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import org.sopt.and.R
 import org.sopt.and.feature.home.HomeScreen
 import org.sopt.and.feature.home.HomeViewModel
 import org.sopt.and.feature.login.LoginScreen
@@ -19,26 +22,34 @@ import org.sopt.and.feature.search.SearchScreen
 import org.sopt.and.feature.search.SearchViewModel
 import org.sopt.and.feature.signup.SignUpScreen
 import org.sopt.and.feature.signup.SignUpViewModel
+import org.sopt.and.utils.toast
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    var localEmail by remember { mutableStateOf("") }
-    var localPassword by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    var isLoggedIn by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = isLoggedIn) {
+        if (isLoggedIn) {
+            context.toast(context.getString(R.string.welcome))
+        }
+    }
 
     NavHost(
         navController = navController,
         startDestination = Routes.Login.screen,
         modifier = Modifier
     ) {
+
+
         composable(Routes.Login.screen) {
+            isLoggedIn = false
             LoginScreen(
-                localEmail = localEmail,
-                localPassword = localPassword,
                 navController = navController,
-                onLoginSuccess = { email, password ->
+                onLoginSuccess = { name, password ->
                     navController.navigate(Routes.Home.screen) {
                         popUpTo(Routes.Home.screen) { inclusive = true }
                     }
@@ -49,9 +60,7 @@ fun NavGraph(
         composable(Routes.SignUp.screen) {
             SignUpScreen(
                 navController = navController,
-                onSignUpSuccess = { email, password ->
-                    localEmail = email
-                    localPassword = password
+                onSignUpSuccess = { name, password ->
                     navController.navigate(Routes.Login.screen) {
                         popUpTo(Routes.Login.screen) { inclusive = true }
                     }
@@ -60,6 +69,7 @@ fun NavGraph(
             )
         }
         composable(Routes.Home.screen) {
+            isLoggedIn = true
             HomeScreen(navController = navController, viewModel = HomeViewModel())
         }
         composable(Routes.Search.screen) {
@@ -68,7 +78,6 @@ fun NavGraph(
         composable(Routes.My.screen) {
             MyScreen(
                 navController = navController,
-                localEmail = localEmail,
                 viewModel = MyViewModel()
             )
         }

@@ -23,6 +23,7 @@ fun ErrorDialog(
     onClick: () -> Unit,
     isEmailError: String,
     isPasswordError: String,
+    isHobbyError: String,
     modifier: Modifier = Modifier
 ) {
     Dialog(
@@ -40,9 +41,21 @@ fun ErrorDialog(
                 textAlign = TextAlign.Center,
                 color = Color.Black,
                 text = when {
-                    isEmailError.isNotEmpty() && isPasswordError.isNotEmpty() -> "$isEmailError\n$isPasswordError"
+                    isEmailError.isNotEmpty() && isPasswordError.isNotEmpty() && isHobbyError.isNotEmpty() ->
+                        "$isEmailError\n$isPasswordError\n$isHobbyError"
+
+                    isEmailError.isNotEmpty() && isPasswordError.isNotEmpty() ->
+                        "$isEmailError\n$isPasswordError"
+
+                    isEmailError.isNotEmpty() && isHobbyError.isNotEmpty() ->
+                        "$isEmailError\n$isHobbyError"
+
+                    isPasswordError.isNotEmpty() && isHobbyError.isNotEmpty() ->
+                        "$isPasswordError\n$isHobbyError"
+
                     isEmailError.isNotEmpty() -> isEmailError
                     isPasswordError.isNotEmpty() -> isPasswordError
+                    isHobbyError.isNotEmpty() -> isHobbyError
                     else -> ""
                 }
             )
