@@ -13,12 +13,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
 import org.sopt.and.data.remote.model.request.UserSignUpRequestDto
+import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.sopt.and.utils.toast
+import retrofit2.HttpException
+import java.io.IOException
 
 class SignUpViewModel : ViewModel() {
     private val userService by lazy { ServicePool.userService }
@@ -26,26 +26,32 @@ class SignUpViewModel : ViewModel() {
     private val _userState = mutableStateOf<UserSignUpResponseDto?>(null)
     val userState: State<UserSignUpResponseDto?> get() = _userState
 
-    fun postUserSignUp(body: UserSignUpRequestDto) {
-        userService.postUserSignUp(
-            body = body
-        ).enqueue(object : Callback<UserSignUpResponseDto> {
-            override fun onResponse(
-                call: Call<UserSignUpResponseDto>,
-                response: Response<UserSignUpResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    _userState.value = response.body()
-                } else {
-                    val error = response.message()
-                    Log.e("error", error.toString())
-                }
-            }
+    fun postUserSignUp(context: Context, body: UserSignUpRequestDto) {
+        viewModelScope.launch {
+            runCatching {
+                userService.postUserSignUp(body = body)
+            }.onSuccess { response ->
+                _userState.value = response.result
+            }.onFailure { error ->
+                when (error) {
+                    is HttpException -> {
+                        when (error.code()) {
+                            400 -> context.toast(context.getString(R.string.fail_to_signup_maximum_length))
+                            409 -> context.toast(context.getString(R.string.fail_to_signup_duplicate_name))
+                        }
+                    }
 
-            override fun onFailure(call: Call<UserSignUpResponseDto>, t: Throwable) {
-                Log.e("failure", t.message.toString())
+                    is IOException -> {
+                        context.toast(context.getString(R.string.fail_to_network))
+                    }
+
+                    else -> {
+                        context.toast(context.getString(R.string.fail_to_signup))
+                    }
+                }
+                Log.e("postUserSignUpError", error.toString())
             }
-        })
+        }
     }
 
     private val _userName = MutableLiveData("")

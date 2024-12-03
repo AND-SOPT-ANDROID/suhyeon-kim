@@ -67,11 +67,12 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher ?: return
     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
 
 
+    val token by viewModel.token.observeAsState("")
     val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
     val showPassword = remember { mutableStateOf(false) }
@@ -175,22 +176,17 @@ fun LoginScreen(
                 //기본 로그인 버튼
                 WavveLoginButton(
                     onClick = {
-                        viewModel.onLoginClick(
-                            onSuccess = { userName, password ->
-                                viewModel.postUserLogin(
-                                    context = context,
-                                    body = UserLoginRequestDto(
-                                        username = userName,
-                                        password = password
-                                    ),
-                                ) { body ->
-                                    editor.putString(context.getString(R.string.login_token), body!!.result.token)
-                                    editor.apply()
-                                    onLoginSuccess(userName, password)
-                                }
-                            },
+                        viewModel.postUserLogin(
+                            context = context,
+                            body = UserLoginRequestDto(
+                                username = userName,
+                                password = password
+                            ),
                         )
 
+                        editor.putString(context.getString(R.string.login_token), token)
+                        editor.apply()
+                        onLoginSuccess(userName, password)
                         //키보드 내리기
                         focusManager.clearFocus()
                     }

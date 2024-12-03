@@ -2,56 +2,53 @@ package org.sopt.and.feature.login
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import okio.IOException
 import org.sopt.and.R
 import org.sopt.and.data.ServicePool
-import org.sopt.and.data.remote.model.response.UserTokenResponseDto
 import org.sopt.and.data.remote.model.request.UserLoginRequestDto
 import org.sopt.and.utils.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.HttpException
 
 class LoginViewModel : ViewModel() {
     private val userService by lazy { ServicePool.userService }
 
-    private val _userState = mutableStateOf<UserTokenResponseDto?>(null)
-    val userState: State<UserTokenResponseDto?> get() = _userState
+    private val _token = MutableLiveData<String>(null)
+    val token: LiveData<String> get() = _token
 
     fun postUserLogin(
         context: Context,
         body: UserLoginRequestDto,
-        callback: (UserTokenResponseDto?) -> Unit
     ) {
-        userService.postUserLogin(
-            body = body
-        ).enqueue(object : Callback<UserTokenResponseDto> {
-            override fun onResponse(
-                call: Call<UserTokenResponseDto>,
-                response: Response<UserTokenResponseDto>
-            ) {
-                if (response.isSuccessful) {
-                    _userState.value = response.body()
-                    callback(response.body())
+        viewModelScope.launch {
+            runCatching {
+                userService.postUserLogin(body = body)
+            }.onSuccess { response ->
+                _token.value = response.result.token
+            }.onFailure { error ->
+                when (error) {
+                    is HttpException -> {
+                        when (error.code()) {
+                            400 -> context.toast(context.getString(R.string.fail_to_login))
+                            403 -> context.toast(context.getString(R.string.fail_to_login_invalid_password))
+                        }
+                    }
 
-                } else {
-                    val error = response.message()
-                    Log.e("error", error.toString())
-                    context.toast(context.getString(R.string.fail_to_login))
+                    is IOException -> {
+                        context.toast(context.getString(R.string.fail_to_network))
+                    }
+
+                    else -> {
+                        context.toast(context.getString(R.string.fail_to_login))
+                    }
                 }
+                Log.e("postUserLoginError", error.toString())
             }
-
-            override fun onFailure(call: Call<UserTokenResponseDto>, t: Throwable) {
-                Log.e("failure", t.message.toString())
-                context.toast(context.getString(R.string.fail_to_login))
-            }
-        })
+        }
     }
 
     private val _userName = MutableLiveData("")
@@ -67,13 +64,5 @@ class LoginViewModel : ViewModel() {
 
     fun setPassword(newPassword: String) {
         _password.value = newPassword
-    }
-
-    fun onLoginClick(
-        onSuccess: (String, String) -> Unit,
-    ) {
-        viewModelScope.launch {
-            onSuccess(userName.value!!, password.value!!)
-        }
     }
 }

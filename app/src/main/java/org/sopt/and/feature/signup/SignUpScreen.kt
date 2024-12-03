@@ -242,6 +242,7 @@ fun SignUpScreen(
                             localHobby = hobby,
                             onSuccess = { userName, password, hobby ->
                                 viewModel.postUserSignUp(
+                                    context = context,
                                     body = UserSignUpRequestDto(
                                         username = userName,
                                         password = password,
