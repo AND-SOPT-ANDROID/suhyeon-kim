@@ -8,9 +8,9 @@ import org.sopt.and.data.remote.model.response.UserHobbyResponseDto
 import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
 import org.sopt.and.data.remote.model.response.UserTokenResponseDto
 import org.sopt.and.data.remote.service.UserService
-import org.sopt.and.di.ServicePool
+import javax.inject.Inject
 
-class UserDataRemoteSourceImpl(
+class UserDataRemoteSourceImpl @Inject constructor(
     private val userService: UserService
 ) : UserDataRemoteSource {
 

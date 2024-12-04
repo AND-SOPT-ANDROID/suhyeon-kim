@@ -10,8 +10,9 @@ import org.sopt.and.domain.model.response.Hobby
 import org.sopt.and.domain.model.response.Token
 import org.sopt.and.domain.model.response.UserNumber
 import org.sopt.and.domain.repository.UserRepository
+import javax.inject.Inject
 
-class UserRepositoryImpl (
+class UserRepositoryImpl @Inject constructor(
     private val userDataRemoteSource: UserDataRemoteSource
 ) : UserRepository {
 

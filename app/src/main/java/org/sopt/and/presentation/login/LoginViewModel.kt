@@ -6,18 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
 import org.sopt.and.R
-import org.sopt.and.di.ServicePool
 import org.sopt.and.domain.model.request.UserLoginModel
 import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.utils.toast
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -29,6 +31,7 @@ class LoginViewModel(
     fun postUserLogin(
         context: Context,
         body: UserLoginModel,
+        onSuccess: () -> Unit
     ) {
         _loginState.value = LoginState.Loading
         viewModelScope.launch {
@@ -37,7 +40,9 @@ class LoginViewModel(
             )
             _loginState.value = result.fold(
                 onSuccess = { response ->
+                    Log.d("LoginSuccess", response.token)
                     _token.value = response.token
+                    onSuccess()
                     LoginState.Success(response)
                 },
                 onFailure = { error ->
@@ -50,6 +55,7 @@ class LoginViewModel(
                         }
 
                         is IOException -> {
+                            Log.e("NetworkError", "IOException occurred: ${error.message}")
                             context.toast(context.getString(R.string.fail_to_network))
                         }
 

@@ -48,18 +48,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
-import org.sopt.and.data.remote.datasourceimpl.UserDataRemoteSourceImpl
+import org.sopt.and.domain.model.request.UserLoginModel
 import org.sopt.and.presentation.core.component.AuthTextField
 import org.sopt.and.presentation.core.component.SocialLoginButtonGroup
 import org.sopt.and.presentation.core.component.WavveLoginButton
-import org.sopt.and.data.remote.model.request.UserLoginRequestDto
-import org.sopt.and.data.repositoryimpl.UserRepositoryImpl
-import org.sopt.and.di.ServicePool
-import org.sopt.and.domain.model.request.UserLoginModel
-import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.presentation.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
@@ -69,7 +64,7 @@ import org.sopt.and.utils.noRippleClickable
 fun LoginScreen(
     navController: NavController,
     onLoginSuccess: (String, String) -> Unit,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -187,15 +182,16 @@ fun LoginScreen(
                             context = context,
                             body = UserLoginModel(
                                 username = userName,
-                                password = password
+                                password = password,
                             ),
+                            onSuccess = {
+                                editor.putString(context.getString(R.string.login_token), token)
+                                editor.apply()
+                                onLoginSuccess(userName, password)
+                                //키보드 내리기
+                                focusManager.clearFocus()
+                            }
                         )
-
-                        editor.putString(context.getString(R.string.login_token), token)
-                        editor.apply()
-                        onLoginSuccess(userName, password)
-                        //키보드 내리기
-                        focusManager.clearFocus()
                     }
                 )
 
