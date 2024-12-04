@@ -54,7 +54,6 @@ fun NavGraph(
                         popUpTo(Routes.Home.screen) { inclusive = true }
                     }
                 },
-                viewModel = LoginViewModel()
             )
         }
         composable(Routes.SignUp.screen) {

@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -50,10 +51,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
+import org.sopt.and.data.remote.datasourceimpl.UserDataRemoteSourceImpl
 import org.sopt.and.presentation.core.component.AuthTextField
 import org.sopt.and.presentation.core.component.SocialLoginButtonGroup
 import org.sopt.and.presentation.core.component.WavveLoginButton
 import org.sopt.and.data.remote.model.request.UserLoginRequestDto
+import org.sopt.and.data.repositoryimpl.UserRepositoryImpl
+import org.sopt.and.di.ServicePool
+import org.sopt.and.domain.model.request.UserLoginModel
+import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.presentation.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
@@ -72,6 +78,7 @@ fun LoginScreen(
     val editor = sharedPreferences.edit()
 
 
+    val loginState by viewModel.loginState.collectAsState()
     val token by viewModel.token.observeAsState("")
     val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
@@ -178,7 +185,7 @@ fun LoginScreen(
                     onClick = {
                         viewModel.postUserLogin(
                             context = context,
-                            body = UserLoginRequestDto(
+                            body = UserLoginModel(
                                 username = userName,
                                 password = password
                             ),

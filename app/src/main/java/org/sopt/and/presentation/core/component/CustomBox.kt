@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.sopt.and.R
-import org.sopt.and.data.remote.model.TodayTopData
+import org.sopt.and.data.local.TodayTopData
 import org.sopt.and.ui.theme.WavveTheme
 
 @Composable

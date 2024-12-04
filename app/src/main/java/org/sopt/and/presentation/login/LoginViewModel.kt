@@ -6,48 +6,60 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okio.IOException
 import org.sopt.and.R
 import org.sopt.and.di.ServicePool
-import org.sopt.and.data.remote.model.request.UserLoginRequestDto
+import org.sopt.and.domain.model.request.UserLoginModel
+import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.utils.toast
 import retrofit2.HttpException
 
-class LoginViewModel : ViewModel() {
-    private val userService by lazy { ServicePool.userService }
+class LoginViewModel(
+    private val userRepository: UserRepository
+) : ViewModel() {
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
+    val loginState: StateFlow<LoginState> = _loginState
 
     private val _token = MutableLiveData<String>(null)
     val token: LiveData<String> get() = _token
 
     fun postUserLogin(
         context: Context,
-        body: UserLoginRequestDto,
+        body: UserLoginModel,
     ) {
+        _loginState.value = LoginState.Loading
         viewModelScope.launch {
-            runCatching {
-                userService.postUserLogin(body = body)
-            }.onSuccess { response ->
-                _token.value = response.result.token
-            }.onFailure { error ->
-                when (error) {
-                    is HttpException -> {
-                        when (error.code()) {
-                            400 -> context.toast(context.getString(R.string.fail_to_login))
-                            403 -> context.toast(context.getString(R.string.fail_to_login_invalid_password))
+            val result = userRepository.postUserLogin(
+                userLoginModel = body
+            )
+            _loginState.value = result.fold(
+                onSuccess = { response ->
+                    _token.value = response.token
+                    LoginState.Success(response)
+                },
+                onFailure = { error ->
+                    when (error) {
+                        is HttpException -> {
+                            when (error.code()) {
+                                400 -> context.toast(context.getString(R.string.fail_to_login))
+                                403 -> context.toast(context.getString(R.string.fail_to_login_invalid_password))
+                            }
+                        }
+
+                        is IOException -> {
+                            context.toast(context.getString(R.string.fail_to_network))
+                        }
+
+                        else -> {
+                            context.toast(context.getString(R.string.fail_to_login))
                         }
                     }
-
-                    is IOException -> {
-                        context.toast(context.getString(R.string.fail_to_network))
-                    }
-
-                    else -> {
-                        context.toast(context.getString(R.string.fail_to_login))
-                    }
+                    LoginState.Failure(error.message.orEmpty())
                 }
-                Log.e("postUserLoginError", error.toString())
-            }
+            )
         }
     }
 
