@@ -1,35 +1,42 @@
 package org.sopt.and.presentation.mypage
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.sopt.and.di.ServicePool
-import org.sopt.and.data.remote.model.response.UserHobbyResponseDto
+import org.sopt.and.domain.repository.UserRepository
+import javax.inject.Inject
 
-class MyViewModel : ViewModel() {
-    private val userService by lazy { ServicePool.userService }
-
-    private val _userState = mutableStateOf<UserHobbyResponseDto?>(null)
-    val userState: State<UserHobbyResponseDto?> get() = _userState
+@HiltViewModel
+class MyViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+    private val _myState = MutableStateFlow<MyState>(MyState.Idle)
+    val myState: StateFlow<MyState> get() = _myState
 
     private val _hobby = MutableLiveData("")
     val hobby: LiveData<String> get() = _hobby
 
     fun getUserHobby(token: String) {
+        _myState.value = MyState.Loading
         viewModelScope.launch {
-            runCatching {
-                userService.getUserHobby(token = token)
-            }.onSuccess { response ->
-                _userState.value = response.result
-                _hobby.value = response.result.hobby
-            }.onFailure { error ->
-                Log.e("getUserHobbyError", error.toString())
-            }
+            val result = userRepository.getUserHobby(token = token)
+            _myState.value = result.fold(
+                onSuccess = { response ->
+                    Log.d("HobbySuccess", response.hobby)
+                    _hobby.value = response.hobby
+                    MyState.Success(response)
+                },
+                onFailure = { error ->
+                    Log.e("getUserHobbyError", error.toString())
+                    MyState.Failure(error.message.toString())
+                }
+            )
         }
     }
 }
