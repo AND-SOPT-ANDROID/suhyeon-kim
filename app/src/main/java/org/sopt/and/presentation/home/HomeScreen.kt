@@ -93,7 +93,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                WavveTabBar(viewModel.homeTabText)
+                WavveTabBar(tabTitles = viewModel.homeTabText)
 
                 HorizontalPager(
                     modifier = Modifier

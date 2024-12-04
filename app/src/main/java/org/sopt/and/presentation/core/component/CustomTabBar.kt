@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.sopt.and.domain.type.HomeTabType
 import org.sopt.and.ui.theme.WavveTheme
 
 
 @Composable
 fun WavveTabBar(
-    tabTitles: List<String>, modifier: Modifier = Modifier
+    tabTitles: Array<HomeTabType>, modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -35,7 +36,7 @@ fun WavveTabBar(
                 onClick = { selectedTabIndex = index },
                 text = {
                     Text(
-                        text = tab,
+                        text = tab.text,
                         fontSize = 18.sp,
                         color = if (selectedTabIndex == index) Color.White else Color.Gray
                     )

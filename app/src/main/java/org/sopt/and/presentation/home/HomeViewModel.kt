@@ -1,24 +1,12 @@
 package org.sopt.and.presentation.home
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import org.sopt.and.R
 import org.sopt.and.data.local.TodayTopData
+import org.sopt.and.domain.type.HomeTabType
 
 class HomeViewModel : ViewModel() {
-    private val _homeTabText = listOf(
-        R.string.new_classic,
-        R.string.drama,
-        R.string.variety_show,
-        R.string.movie,
-        R.string.animation,
-        R.string.overseas_series
-    )
-
-    val homeTabText: List<String>
-        @Composable
-        get() = _homeTabText.map { stringResource(it) }
+    val homeTabText = HomeTabType.entries.toTypedArray()
 
     val editorDummy = List(20) {
         TodayTopData(
