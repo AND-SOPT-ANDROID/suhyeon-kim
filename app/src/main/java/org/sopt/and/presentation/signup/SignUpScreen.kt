@@ -46,13 +46,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import org.sopt.and.R
+import org.sopt.and.domain.model.request.UserSignUpModel
 import org.sopt.and.presentation.core.component.AuthTextField
 import org.sopt.and.presentation.core.component.ErrorDialog
 import org.sopt.and.presentation.core.component.WavveSignUpButton
-import org.sopt.and.data.remote.model.request.UserSignUpRequestDto
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
 
@@ -61,7 +61,7 @@ import org.sopt.and.utils.noRippleClickable
 fun SignUpScreen(
     navController: NavController,
     onSignUpSuccess: (String, String) -> Unit,
-    viewModel: SignUpViewModel = viewModel()
+    viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
@@ -243,7 +243,7 @@ fun SignUpScreen(
                             onSuccess = { userName, password, hobby ->
                                 viewModel.postUserSignUp(
                                     context = context,
-                                    body = UserSignUpRequestDto(
+                                    body = UserSignUpModel(
                                         username = userName,
                                         password = password,
                                         hobby = hobby

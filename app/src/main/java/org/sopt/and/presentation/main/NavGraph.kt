@@ -15,13 +15,10 @@ import org.sopt.and.R
 import org.sopt.and.presentation.home.HomeScreen
 import org.sopt.and.presentation.home.HomeViewModel
 import org.sopt.and.presentation.login.LoginScreen
-import org.sopt.and.presentation.login.LoginViewModel
 import org.sopt.and.presentation.mypage.MyScreen
-import org.sopt.and.presentation.mypage.MyViewModel
 import org.sopt.and.presentation.search.SearchScreen
 import org.sopt.and.presentation.search.SearchViewModel
 import org.sopt.and.presentation.signup.SignUpScreen
-import org.sopt.and.presentation.signup.SignUpViewModel
 import org.sopt.and.utils.toast
 
 @Composable
@@ -64,7 +61,6 @@ fun NavGraph(
                         popUpTo(Routes.Login.screen) { inclusive = true }
                     }
                 },
-                viewModel = SignUpViewModel()
             )
         }
         composable(Routes.Home.screen) {
@@ -77,7 +73,6 @@ fun NavGraph(
         composable(Routes.My.screen) {
             MyScreen(
                 navController = navController,
-                viewModel = MyViewModel()
             )
         }
     }

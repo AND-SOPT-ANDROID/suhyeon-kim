@@ -10,47 +10,55 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.sopt.and.R
-import org.sopt.and.di.ServicePool
-import org.sopt.and.data.remote.model.request.UserSignUpRequestDto
-import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
+import org.sopt.and.domain.model.request.UserSignUpModel
+import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
 import org.sopt.and.utils.toast
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class SignUpViewModel : ViewModel() {
-    private val userService by lazy { ServicePool.userService }
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
+    private val _signUpState = mutableStateOf<SignUpState>(SignUpState.Idle)
+    val signUpState: State<SignUpState> get() = _signUpState
 
-    private val _userState = mutableStateOf<UserSignUpResponseDto?>(null)
-    val userState: State<UserSignUpResponseDto?> get() = _userState
-
-    fun postUserSignUp(context: Context, body: UserSignUpRequestDto) {
+    fun postUserSignUp(context: Context, body: UserSignUpModel) {
+        _signUpState.value = SignUpState.Loading
         viewModelScope.launch {
-            runCatching {
-                userService.postUserSignUp(body = body)
-            }.onSuccess { response ->
-                _userState.value = response.result
-            }.onFailure { error ->
-                when (error) {
-                    is HttpException -> {
-                        when (error.code()) {
-                            400 -> context.toast(context.getString(R.string.fail_to_signup_maximum_length))
-                            409 -> context.toast(context.getString(R.string.fail_to_signup_duplicate_name))
+            val result = userRepository.postUserSignUp(
+                userSignUpModel = body
+            )
+            _signUpState.value = result.fold(
+                onSuccess = { response ->
+                    Log.d("SignUpSuccess", response.no.toString())
+                    SignUpState.Success(response)
+                },
+                onFailure = { error ->
+                    when (error) {
+                        is HttpException -> {
+                            when (error.code()) {
+                                400 -> context.toast(context.getString(R.string.fail_to_signup_maximum_length))
+                                409 -> context.toast(context.getString(R.string.fail_to_signup_duplicate_name))
+                            }
+                        }
+
+                        is IOException -> {
+                            context.toast(context.getString(R.string.fail_to_network))
+                        }
+
+                        else -> {
+                            context.toast(context.getString(R.string.fail_to_signup))
                         }
                     }
-
-                    is IOException -> {
-                        context.toast(context.getString(R.string.fail_to_network))
-                    }
-
-                    else -> {
-                        context.toast(context.getString(R.string.fail_to_signup))
-                    }
+                    SignUpState.Failure(error.message.orEmpty())
                 }
-                Log.e("postUserSignUpError", error.toString())
-            }
+            )
         }
     }
 
