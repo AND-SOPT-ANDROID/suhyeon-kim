@@ -1,7 +1,6 @@
 package org.sopt.and.presentation.login
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,12 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okio.IOException
 import org.sopt.and.R
 import org.sopt.and.domain.model.request.UserLoginModel
 import org.sopt.and.domain.repository.UserRepository
-import org.sopt.and.utils.toast
-import retrofit2.HttpException
+import org.sopt.and.utils.handleErrorToast
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,22 +42,12 @@ class LoginViewModel @Inject constructor(
                     LoginState.Success(response)
                 },
                 onFailure = { error ->
-                    when (error) {
-                        is HttpException -> {
-                            when (error.code()) {
-                                400 -> context.toast(context.getString(R.string.fail_to_login))
-                                403 -> context.toast(context.getString(R.string.fail_to_login_invalid_password))
-                            }
-                        }
-
-                        is IOException -> {
-                            context.toast(context.getString(R.string.fail_to_network))
-                        }
-
-                        else -> {
-                            context.toast(context.getString(R.string.fail_to_login))
-                        }
-                    }
+                    handleErrorToast(
+                        exception = error,
+                        is400Error = R.string.fail_to_login,
+                        is403Error = R.string.fail_to_login_invalid_password,
+                        context = context
+                    )
                     LoginState.Failure(error.message.orEmpty())
                 }
             )

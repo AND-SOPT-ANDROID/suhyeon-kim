@@ -1,7 +1,6 @@
 package org.sopt.and.presentation.signup
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,9 +15,7 @@ import org.sopt.and.R
 import org.sopt.and.domain.model.request.UserSignUpModel
 import org.sopt.and.domain.repository.UserRepository
 import org.sopt.and.utils.AuthKey.PASSWORD_PATTERN
-import org.sopt.and.utils.toast
-import retrofit2.HttpException
-import java.io.IOException
+import org.sopt.and.utils.handleErrorToast
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,22 +36,12 @@ class SignUpViewModel @Inject constructor(
                     SignUpState.Success(response)
                 },
                 onFailure = { error ->
-                    when (error) {
-                        is HttpException -> {
-                            when (error.code()) {
-                                400 -> context.toast(context.getString(R.string.fail_to_signup_maximum_length))
-                                409 -> context.toast(context.getString(R.string.fail_to_signup_duplicate_name))
-                            }
-                        }
-
-                        is IOException -> {
-                            context.toast(context.getString(R.string.fail_to_network))
-                        }
-
-                        else -> {
-                            context.toast(context.getString(R.string.fail_to_signup))
-                        }
-                    }
+                    handleErrorToast(
+                        exception = error,
+                        is400Error = R.string.fail_to_signup_maximum_length,
+                        is409Error = R.string.fail_to_signup_duplicate_name,
+                        context = context
+                    )
                     SignUpState.Failure(error.message.orEmpty())
                 }
             )

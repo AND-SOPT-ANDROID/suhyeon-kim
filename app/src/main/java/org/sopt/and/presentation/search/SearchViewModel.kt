@@ -2,7 +2,9 @@ package org.sopt.and.presentation.search
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel : ViewModel() {
+class SearchViewModel @Inject constructor(
+) : ViewModel() {
 }

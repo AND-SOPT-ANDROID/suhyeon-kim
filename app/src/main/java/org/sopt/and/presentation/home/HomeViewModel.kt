@@ -5,9 +5,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import org.sopt.and.R
 import org.sopt.and.data.local.TodayTopData
 import org.sopt.and.domain.type.HomeTabType
+import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel : ViewModel() {
+class HomeViewModel @Inject constructor(
+) : ViewModel() {
     val homeTabText = HomeTabType.entries.toTypedArray()
 
     val editorDummy = List(20) {
