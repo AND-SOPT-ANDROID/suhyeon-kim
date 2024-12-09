@@ -13,12 +13,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.sopt.and.BuildConfig
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class Wavve
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -63,20 +59,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        json: Json
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    @Wavve
     fun provideWavveRetrofit(
         okHttpClient: OkHttpClient,
         json: Json

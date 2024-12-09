@@ -13,6 +13,6 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideUserService(@Wavve retrofit: Retrofit): UserService =
+    fun provideUserService(retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
 }
