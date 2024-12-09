@@ -13,11 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.sopt.and.R
 import org.sopt.and.presentation.home.HomeScreen
-import org.sopt.and.presentation.home.HomeViewModel
 import org.sopt.and.presentation.login.LoginScreen
 import org.sopt.and.presentation.mypage.MyScreen
 import org.sopt.and.presentation.search.SearchScreen
-import org.sopt.and.presentation.search.SearchViewModel
 import org.sopt.and.presentation.signup.SignUpScreen
 import org.sopt.and.utils.toast
 
@@ -65,10 +63,10 @@ fun NavGraph(
         }
         composable(Routes.Home.screen) {
             isLoggedIn = true
-            HomeScreen(navController = navController, viewModel = HomeViewModel())
+            HomeScreen(navController = navController)
         }
         composable(Routes.Search.screen) {
-            SearchScreen(navController = navController, viewModel = SearchViewModel())
+            SearchScreen(navController = navController)
         }
         composable(Routes.My.screen) {
             MyScreen(

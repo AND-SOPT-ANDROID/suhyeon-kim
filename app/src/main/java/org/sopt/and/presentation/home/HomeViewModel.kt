@@ -1,10 +1,12 @@
 package org.sopt.and.presentation.home
 
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.sopt.and.R
 import org.sopt.and.data.local.TodayTopData
 import org.sopt.and.domain.type.HomeTabType
 
+@HiltViewModel
 class HomeViewModel : ViewModel() {
     val homeTabText = HomeTabType.entries.toTypedArray()
 
