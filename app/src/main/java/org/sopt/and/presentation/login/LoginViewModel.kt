@@ -40,7 +40,6 @@ class LoginViewModel @Inject constructor(
             )
             _loginState.value = result.fold(
                 onSuccess = { response ->
-                    Log.d("LoginSuccess", response.token)
                     _token.value = response.token
                     onSuccess()
                     LoginState.Success(response)
@@ -55,7 +54,6 @@ class LoginViewModel @Inject constructor(
                         }
 
                         is IOException -> {
-                            Log.e("NetworkError", "IOException occurred: ${error.message}")
                             context.toast(context.getString(R.string.fail_to_network))
                         }
 

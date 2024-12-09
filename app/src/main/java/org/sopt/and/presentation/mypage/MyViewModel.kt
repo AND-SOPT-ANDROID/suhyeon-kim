@@ -28,12 +28,10 @@ class MyViewModel @Inject constructor(
             val result = userRepository.getUserHobby(token = token)
             _myState.value = result.fold(
                 onSuccess = { response ->
-                    Log.d("HobbySuccess", response.hobby)
                     _hobby.value = response.hobby
                     MyState.Success(response)
                 },
                 onFailure = { error ->
-                    Log.e("getUserHobbyError", error.toString())
                     MyState.Failure(error.message.toString())
                 }
             )
