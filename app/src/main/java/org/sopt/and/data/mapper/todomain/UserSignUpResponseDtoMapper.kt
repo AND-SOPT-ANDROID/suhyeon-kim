@@ -4,5 +4,5 @@ import org.sopt.and.data.remote.model.response.UserSignUpResponseDto
 import org.sopt.and.domain.model.response.UserNumber
 
 fun UserSignUpResponseDto.toDomain(): UserNumber = UserNumber(
-    no = this.no
+    userId = this.userId
 )

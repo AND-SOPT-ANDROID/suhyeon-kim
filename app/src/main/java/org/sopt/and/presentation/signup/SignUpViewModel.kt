@@ -36,7 +36,7 @@ class SignUpViewModel @Inject constructor(
             )
             _signUpState.value = result.fold(
                 onSuccess = { response ->
-                    Log.d("SignUpSuccess", response.no.toString())
+                    Log.d("SignUpSuccess", response.userId.toString())
                     SignUpState.Success(response)
                 },
                 onFailure = { error ->
