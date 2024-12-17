@@ -1,6 +1,7 @@
 package org.sopt.and.presentation.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.and.R
+import org.sopt.and.data.local.TodayTopData
+import org.sopt.and.domain.type.HomeTabType
 import org.sopt.and.presentation.core.component.Banner
 import org.sopt.and.presentation.core.component.EditorRecommendBox
 import org.sopt.and.presentation.core.component.TodayTop20Box
@@ -48,17 +52,22 @@ import org.sopt.and.ui.theme.WavveTheme
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    HomeScreen()
+    val tabText = viewModel.homeTabText
+    val editorDummy = viewModel.editorDummy
+    val top20Dummy = viewModel.top20Dummy
+
+    HomeScreen(tabText = tabText, editorDummy = editorDummy, top20Dummy = top20Dummy)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
-    val scrollState = rememberScrollState()
-    val pagerState = rememberPagerState(
-        pageCount = { 6 }
-    )
-
+fun HomeScreen(
+    tabText: Array<HomeTabType>,
+    editorDummy: List<TodayTopData>,
+    top20Dummy: List<TodayTopData>,
+    scrollState: ScrollState = rememberScrollState(),
+    pagerState: PagerState = rememberPagerState(pageCount = { 6 })
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -99,7 +108,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                WavveTabBar(tabTitles = viewModel.homeTabText)
+                WavveTabBar(tabTitles = tabText)
 
                 HorizontalPager(
                     modifier = Modifier
@@ -119,7 +128,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp),
                 ) {
-                    items(items = viewModel.editorDummy, key = { it.ranking }) { item ->
+                    items(items = editorDummy, key = { it.ranking }) { item ->
                         EditorRecommendBox(topData = item, modifier = Modifier)
                     }
                 }
@@ -129,7 +138,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(horizontal = 20.dp)
                 ) {
-                    items(items = viewModel.top20Dummy, key = { it.ranking }) { item ->
+                    items(items = top20Dummy, key = { it.ranking }) { item ->
                         TodayTop20Box(topData = item, modifier = Modifier.padding(bottom = 90.dp))
                     }
                 }
