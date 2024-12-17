@@ -1,7 +1,6 @@
 package org.sopt.and.presentation.signup
 
 import android.content.Context
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.sopt.and.R
 import org.sopt.and.domain.model.request.UserSignUpModel
@@ -22,8 +23,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _signUpState = mutableStateOf<SignUpState>(SignUpState.Idle)
-    val signUpState: State<SignUpState> get() = _signUpState
+    private val _signUpState = MutableStateFlow<SignUpState>(SignUpState.Idle)
+    val signUpState: StateFlow<SignUpState> get() = _signUpState
 
     fun postUserSignUp(context: Context, body: UserSignUpModel) {
         _signUpState.value = SignUpState.Loading

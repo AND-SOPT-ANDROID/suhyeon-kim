@@ -10,11 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import org.sopt.and.ui.theme.WavveTheme
 
 @Composable
-fun SearchScreen(navController: NavController, viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchRoute(
+    viewModel: SearchViewModel = hiltViewModel()
+) {
+    SearchScreen()
+}
+
+@Composable
+fun SearchScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->

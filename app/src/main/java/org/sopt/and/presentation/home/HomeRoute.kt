@@ -37,7 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.presentation.core.component.Banner
 import org.sopt.and.presentation.core.component.EditorRecommendBox
@@ -45,9 +44,16 @@ import org.sopt.and.presentation.core.component.TodayTop20Box
 import org.sopt.and.presentation.core.component.WavveTabBar
 import org.sopt.and.ui.theme.WavveTheme
 
+@Composable
+fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    HomeScreen()
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val scrollState = rememberScrollState()
     val pagerState = rememberPagerState(
         pageCount = { 6 }

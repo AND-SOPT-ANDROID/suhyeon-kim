@@ -49,21 +49,35 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.domain.model.request.UserLoginModel
 import org.sopt.and.presentation.core.component.AuthTextField
 import org.sopt.and.presentation.core.component.SocialLoginButtonGroup
 import org.sopt.and.presentation.core.component.WavveLoginButton
-import org.sopt.and.presentation.main.Routes
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
+
+@Composable
+fun LoginRoute(
+    navigateToSignUp: () -> Unit,
+    onLoginSuccess: (String, String) -> Unit,
+    viewModel: LoginViewModel = hiltViewModel(),
+) {
+    val loginState by viewModel.loginState.collectAsState()
+
+    LoginScreen(
+        state = loginState,
+        navigateToSignUp = navigateToSignUp,
+        onLoginSuccess = onLoginSuccess,
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    navController: NavController,
+    state: LoginState,
     onLoginSuccess: (String, String) -> Unit,
+    navigateToSignUp: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -73,7 +87,6 @@ fun LoginScreen(
     val editor = sharedPreferences.edit()
 
 
-    val loginState by viewModel.loginState.collectAsState()
     val token by viewModel.token.observeAsState("")
     val userName by viewModel.userName.observeAsState("")
     val password by viewModel.password.observeAsState("")
@@ -229,9 +242,7 @@ fun LoginScreen(
                             fontSize = 12.sp,
                             color = Color.Gray,
                             modifier = Modifier.clickable {
-                                navController.navigate(Routes.SignUp.screen) {
-                                    popUpTo(Routes.SignUp.screen) { inclusive = true }
-                                }
+                                navigateToSignUp()
                             }
                         )
                     }

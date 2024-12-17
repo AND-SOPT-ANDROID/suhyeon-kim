@@ -18,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.presentation.core.component.EmptyBox
 import org.sopt.and.presentation.core.component.ProfileBox
@@ -26,8 +25,14 @@ import org.sopt.and.presentation.core.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
 
 @Composable
+fun MyRoute(
+    viewModel: MyViewModel = hiltViewModel()
+) {
+    MyScreen()
+}
+
+@Composable
 fun MyScreen(
-    navController: NavController,
     viewModel: MyViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current

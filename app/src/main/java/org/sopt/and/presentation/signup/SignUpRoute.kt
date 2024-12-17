@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import org.sopt.and.R
 import org.sopt.and.domain.model.request.UserSignUpModel
 import org.sopt.and.presentation.core.component.AuthTextField
@@ -56,10 +56,24 @@ import org.sopt.and.presentation.core.component.WavveSignUpButton
 import org.sopt.and.ui.theme.WavveTheme
 import org.sopt.and.utils.noRippleClickable
 
+
+@Composable
+fun SignUpRoute(
+    onSignUpSuccess: (String, String) -> Unit,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
+    val signUpState by viewModel.signUpState.collectAsState()
+
+    SignUpScreen(
+        state = signUpState,
+        onSignUpSuccess = onSignUpSuccess,
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    navController: NavController,
+    state: SignUpState,
     onSignUpSuccess: (String, String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {

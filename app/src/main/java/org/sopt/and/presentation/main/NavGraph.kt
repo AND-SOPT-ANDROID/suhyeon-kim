@@ -12,11 +12,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import org.sopt.and.R
-import org.sopt.and.presentation.home.HomeScreen
-import org.sopt.and.presentation.login.LoginScreen
-import org.sopt.and.presentation.mypage.MyScreen
-import org.sopt.and.presentation.search.SearchScreen
-import org.sopt.and.presentation.signup.SignUpScreen
+import org.sopt.and.presentation.home.HomeRoute
+import org.sopt.and.presentation.login.LoginRoute
+import org.sopt.and.presentation.mypage.MyRoute
+import org.sopt.and.presentation.search.SearchRoute
+import org.sopt.and.presentation.signup.SignUpRoute
 import org.sopt.and.utils.toast
 
 @Composable
@@ -39,11 +39,10 @@ fun NavGraph(
         modifier = Modifier
     ) {
 
-
         composable(Routes.Login.screen) {
             isLoggedIn = false
-            LoginScreen(
-                navController = navController,
+            LoginRoute(
+                navigateToSignUp = { navController.navigateToSignUp() },
                 onLoginSuccess = { name, password ->
                     navController.navigate(Routes.Home.screen) {
                         popUpTo(Routes.Home.screen) { inclusive = true }
@@ -52,8 +51,7 @@ fun NavGraph(
             )
         }
         composable(Routes.SignUp.screen) {
-            SignUpScreen(
-                navController = navController,
+            SignUpRoute(
                 onSignUpSuccess = { name, password ->
                     navController.navigate(Routes.Login.screen) {
                         popUpTo(Routes.Login.screen) { inclusive = true }
@@ -63,15 +61,13 @@ fun NavGraph(
         }
         composable(Routes.Home.screen) {
             isLoggedIn = true
-            HomeScreen(navController = navController)
+            HomeRoute()
         }
         composable(Routes.Search.screen) {
-            SearchScreen(navController = navController)
+            SearchRoute()
         }
         composable(Routes.My.screen) {
-            MyScreen(
-                navController = navController,
-            )
+            MyRoute()
         }
     }
 }
