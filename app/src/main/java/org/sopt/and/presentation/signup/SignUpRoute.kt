@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -62,11 +63,52 @@ fun SignUpRoute(
     onSignUpSuccess: (String, String) -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
+    val userName by viewModel.userName.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+    val hobby by viewModel.hobby.observeAsState("")
+    val showPassword = remember { mutableStateOf(false) }
+    val showDialog by viewModel.showDialog.observeAsState(false)
     val signUpState by viewModel.signUpState.collectAsState()
 
     SignUpScreen(
         state = signUpState,
-        onSignUpSuccess = onSignUpSuccess,
+        userName = userName,
+        password = password,
+        hobby = hobby,
+        showPassword = showPassword,
+        showDialog = showDialog,
+        nameErrorMsg = viewModel.nameErrorMsg,
+        passwordErrorMsg = viewModel.passwordErrorMsg,
+        hobbyErrorMsg = viewModel.hobbyErrorMsg,
+        onNameChanged = { newName -> viewModel.setUserName(newName) },
+        onPasswordChanged = { newPassword -> viewModel.setPassword(newPassword) },
+        onHobbyChanged = { newHobby -> viewModel.setHobby(newHobby) },
+        onDialogStateChanged = { dialogState -> viewModel.setDialogState(dialogState) },
+        onSignUpClicked = {
+            viewModel.onSignUpClick(
+                localName = userName,
+                localPassword = password,
+                localHobby = hobby,
+                onSuccess = { userName, password, hobby ->
+                    viewModel.postUserSignUp(
+                        context = context,
+                        body = UserSignUpModel(
+                            username = userName,
+                            password = password,
+                            hobby = hobby
+                        )
+                    )
+                    onSignUpSuccess(userName, password)
+                },
+                onFailure = {
+                    viewModel.setDialogState(true)
+                },
+                context = context
+            )
+        }
+
     )
 }
 
@@ -74,19 +116,22 @@ fun SignUpRoute(
 @Composable
 fun SignUpScreen(
     state: SignUpState,
-    onSignUpSuccess: (String, String) -> Unit,
-    viewModel: SignUpViewModel = hiltViewModel()
+    userName: String,
+    password: String,
+    hobby: String,
+    showPassword: MutableState<Boolean>,
+    showDialog: Boolean,
+    nameErrorMsg: String,
+    passwordErrorMsg: String,
+    hobbyErrorMsg: String,
+    onNameChanged: (String) -> Unit = {},
+    onPasswordChanged: (String) -> Unit = {},
+    onHobbyChanged: (String) -> Unit = {},
+    onDialogStateChanged: (Boolean) -> Unit = {},
+    onSignUpClicked: () -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
-    val context = LocalContext.current
-
-    val userName by viewModel.userName.observeAsState("")
-    val password by viewModel.password.observeAsState("")
-    val hobby by viewModel.hobby.observeAsState("")
-
-    val showPassword = remember { mutableStateOf(false) }
-    val showDialog by viewModel.showDialog.observeAsState(false)
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -161,9 +206,8 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     value = userName,
-                    onValueChange = {
-                        viewModel.setUserName(it)
-                        viewModel.validateInputs(userName, password, hobby, context)
+                    onValueChange = { userName ->
+                        onNameChanged(userName)
                     },
                     placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -173,7 +217,7 @@ fun SignUpScreen(
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
-                    isError = viewModel.nameErrorMsg.isNotEmpty(),
+                    isError = nameErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -187,9 +231,8 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     value = password,
-                    onValueChange = {
-                        viewModel.setPassword(it)
-                        viewModel.validateInputs(userName, password, hobby, context)
+                    onValueChange = { password ->
+                        onPasswordChanged(password)
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -211,7 +254,7 @@ fun SignUpScreen(
                         onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     ),
                     visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = viewModel.passwordErrorMsg.isNotEmpty()
+                    isError = passwordErrorMsg.isNotEmpty()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -225,9 +268,8 @@ fun SignUpScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
                     value = hobby,
-                    onValueChange = {
-                        viewModel.setHobby(it)
-                        viewModel.validateInputs(userName, password, hobby, context)
+                    onValueChange = { hobby ->
+                        onHobbyChanged(hobby)
                     },
                     placeholder = stringResource(R.string.placeholder_hobby),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -239,7 +281,7 @@ fun SignUpScreen(
                             focusManager.clearFocus()
                         }
                     ),
-                    isError = viewModel.hobbyErrorMsg.isNotEmpty(),
+                    isError = hobbyErrorMsg.isNotEmpty(),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -249,41 +291,20 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 WavveSignUpButton(
-                    onClick = {
-                        viewModel.onSignUpClick(
-                            localName = userName,
-                            localPassword = password,
-                            localHobby = hobby,
-                            onSuccess = { userName, password, hobby ->
-                                viewModel.postUserSignUp(
-                                    context = context,
-                                    body = UserSignUpModel(
-                                        username = userName,
-                                        password = password,
-                                        hobby = hobby
-                                    )
-                                )
-                                onSignUpSuccess(userName, password)
-                            },
-                            onFailure = {
-                                viewModel.setDialogState(true)
-                            },
-                            context = context
-                        )
-                    }
+                    onClick = onSignUpClicked
                 )
 
                 if (showDialog) {
                     ErrorDialog(
                         onDismissRequest = {
-                            viewModel.setDialogState(false)
+                            onDialogStateChanged(false)
                         },
                         onClick = {
-                            viewModel.setDialogState(false)
+                            onDialogStateChanged(false)
                         },
-                        isEmailError = viewModel.nameErrorMsg,
-                        isPasswordError = viewModel.passwordErrorMsg,
-                        isHobbyError = viewModel.hobbyErrorMsg,
+                        isEmailError = nameErrorMsg,
+                        isPasswordError = passwordErrorMsg,
+                        isHobbyError = hobbyErrorMsg,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(20.dp))

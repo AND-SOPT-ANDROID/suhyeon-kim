@@ -81,7 +81,7 @@ fun LoginRoute(
         password = password,
         showPassword = showPassword,
         navigateToSignUp = navigateToSignUp,
-        onLoginChanged = { newName -> viewModel.setUserName(newName) },
+        onNameChanged = { newName -> viewModel.setUserName(newName) },
         onPasswordChanged = { newPassword -> viewModel.setPassword(newPassword) },
         onLoginClicked = {
             viewModel.postUserLogin(
@@ -110,7 +110,7 @@ fun LoginScreen(
     password: String,
     showPassword: MutableState<Boolean>,
     navigateToSignUp: () -> Unit,
-    onLoginChanged: (String) -> Unit = {},
+    onNameChanged: (String) -> Unit = {},
     onPasswordChanged: (String) -> Unit = {},
     onLoginClicked: () -> Unit = {},
 ) {
@@ -166,7 +166,7 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     value = userName,
                     onValueChange = { userName ->
-                        onLoginChanged(userName)
+                        onNameChanged(userName)
                     },
                     placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
