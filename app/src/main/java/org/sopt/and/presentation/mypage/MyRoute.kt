@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,28 +23,28 @@ import org.sopt.and.presentation.core.component.EmptyBox
 import org.sopt.and.presentation.core.component.ProfileBox
 import org.sopt.and.presentation.core.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
+import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
 fun MyRoute(
     viewModel: MyViewModel = hiltViewModel()
 ) {
-    MyScreen()
-}
-
-@Composable
-fun MyScreen(
-    viewModel: MyViewModel = hiltViewModel()
-) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
     val token = sharedPreferences.getString("loginToken", "").orEmpty()
+    val myState by viewModel.myState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getUserHobby(token = token)
     }
 
-    val hobby by viewModel.hobby.observeAsState("")
+    MyScreen(state = myState)
+}
 
+@Composable
+fun MyScreen(
+    state: MyState,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
@@ -56,10 +56,15 @@ fun MyScreen(
         ) {
             Column {
                 ProfileBox(
-                    userEmail = hobby,
+                    userEmail =
+                    when (state) {
+                        is MyState.Success -> state.result.hobby
+                        else -> {
+                            DEFAULT_NAME
+                        }
+                    },
                     modifier = Modifier
                 )
-
                 Spacer(modifier = Modifier.height(1.dp))
 
                 TicketBox()
