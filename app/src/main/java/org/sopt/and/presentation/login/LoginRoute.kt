@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -63,12 +64,41 @@ fun LoginRoute(
     onLoginSuccess: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+
+    val token by viewModel.token.observeAsState("")
+    val userName by viewModel.userName.observeAsState("")
+    val password by viewModel.password.observeAsState("")
+    val showPassword = remember { mutableStateOf(false) }
     val loginState by viewModel.loginState.collectAsState()
 
     LoginScreen(
         state = loginState,
+        userName = userName,
+        password = password,
+        showPassword = showPassword,
         navigateToSignUp = navigateToSignUp,
-        onLoginSuccess = onLoginSuccess,
+        onLoginChanged = { newName -> viewModel.setUserName(newName) },
+        onPasswordChanged = { newPassword -> viewModel.setPassword(newPassword) },
+        onLoginClicked = {
+            viewModel.postUserLogin(
+                context = context,
+                body = UserLoginModel(
+                    username = userName,
+                    password = password,
+                ),
+                onSuccess = {
+                    editor.putString(context.getString(R.string.login_token), token)
+                    editor.apply()
+                    onLoginSuccess(userName, password)
+                    //키보드 내리기
+                    focusManager.clearFocus()
+                }
+            )
+        },
     )
 }
 
@@ -76,21 +106,16 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onLoginSuccess: (String, String) -> Unit,
+    userName: String,
+    password: String,
+    showPassword: MutableState<Boolean>,
     navigateToSignUp: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    onLoginChanged: (String) -> Unit = {},
+    onPasswordChanged: (String) -> Unit = {},
+    onLoginClicked: () -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
     val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher ?: return
-    val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
-    val editor = sharedPreferences.edit()
-
-
-    val token by viewModel.token.observeAsState("")
-    val userName by viewModel.userName.observeAsState("")
-    val password by viewModel.password.observeAsState("")
-    val showPassword = remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -140,8 +165,8 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = userName,
-                    onValueChange = {
-                        viewModel.setUserName(it)
+                    onValueChange = { userName ->
+                        onLoginChanged(userName)
                     },
                     placeholder = stringResource(R.string.placeholder_user_name),
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -159,8 +184,8 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = password,
-                    onValueChange = {
-                        viewModel.setPassword(it)
+                    onValueChange = { password ->
+                        onPasswordChanged(password)
                     },
                     placeholder = stringResource(R.string.placeholder_password),
                     suffix = {
@@ -190,22 +215,7 @@ fun LoginScreen(
 
                 //기본 로그인 버튼
                 WavveLoginButton(
-                    onClick = {
-                        viewModel.postUserLogin(
-                            context = context,
-                            body = UserLoginModel(
-                                username = userName,
-                                password = password,
-                            ),
-                            onSuccess = {
-                                editor.putString(context.getString(R.string.login_token), token)
-                                editor.apply()
-                                onLoginSuccess(userName, password)
-                                //키보드 내리기
-                                focusManager.clearFocus()
-                            }
-                        )
-                    }
+                    onClick = onLoginClicked
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -250,7 +260,6 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                //소셜 로그인 버튼
                 SocialLoginButtonGroup(stringResource(R.string.social_description))
             }
         }
