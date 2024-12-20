@@ -23,18 +23,18 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _signUpState = MutableStateFlow<SignUpState>(SignUpState.Idle)
-    val signUpState: StateFlow<SignUpState> get() = _signUpState
+    private val _signUpState = MutableStateFlow<SignUpContract.SignUpState>(SignUpContract.SignUpState.Idle)
+    val signUpState: StateFlow<SignUpContract.SignUpState> get() = _signUpState
 
     fun postUserSignUp(context: Context, body: UserSignUpModel) {
-        _signUpState.value = SignUpState.Loading
+        _signUpState.value = SignUpContract.SignUpState.Loading
         viewModelScope.launch {
             val result = userRepository.postUserSignUp(
                 userSignUpModel = body
             )
             _signUpState.value = result.fold(
                 onSuccess = { response ->
-                    SignUpState.Success(response)
+                    SignUpContract.SignUpState.Success(response)
                 },
                 onFailure = { error ->
                     handleErrorToast(
@@ -43,7 +43,7 @@ class SignUpViewModel @Inject constructor(
                         is409Error = R.string.fail_to_signup_duplicate_name,
                         context = context
                     )
-                    SignUpState.Failure(error.message.orEmpty())
+                    SignUpContract.SignUpState.Failure(error.message.orEmpty())
                 }
             )
         }
