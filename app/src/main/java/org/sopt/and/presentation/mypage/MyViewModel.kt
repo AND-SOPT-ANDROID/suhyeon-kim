@@ -1,38 +1,36 @@
 package org.sopt.and.presentation.mypage
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.sopt.and.domain.repository.UserRepository
+import org.sopt.and.presentation.core.base.BaseViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MyViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : ViewModel() {
-    private val _myState = MutableStateFlow<MyState>(MyState.Idle)
-    val myState: StateFlow<MyState> get() = _myState
+) : BaseViewModel<MyContract.MyUiState, MyContract.MySideEffect, MyContract.MyEvent>() {
+    override fun createInitialState(): MyContract.MyUiState = MyContract.MyUiState()
 
-    private val _hobby = MutableLiveData("")
-    val hobby: LiveData<String> get() = _hobby
+    override suspend fun handleEvent(event: MyContract.MyEvent) {
+        when (event) {
+            is MyContract.MyEvent.GetUserHobby -> getUserHobby(token = event.token)
+            is MyContract.MyEvent.StateChanged -> setState { copy(myState = event.myState) }
+        }
+    }
 
     fun getUserHobby(token: String) {
-        _myState.value = MyState.Loading
+        setState { copy(myState = MyState.Loading) }
         viewModelScope.launch {
             val result = userRepository.getUserHobby(token = token)
-            _myState.value = result.fold(
+            result.fold(
                 onSuccess = { response ->
-                    _hobby.value = response.hobby
-                    MyState.Success(response)
+                    setState { copy(hobby = response.hobby) }
+                    setState { copy(myState = MyState.Success(response)) }
                 },
                 onFailure = { error ->
-                    MyState.Failure(error.message.toString())
+                    setState { copy(myState = MyState.Failure(error.message.toString())) }
                 }
             )
         }

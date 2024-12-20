@@ -23,7 +23,6 @@ import org.sopt.and.presentation.core.component.EmptyBox
 import org.sopt.and.presentation.core.component.ProfileBox
 import org.sopt.and.presentation.core.component.TicketBox
 import org.sopt.and.ui.theme.WavveTheme
-import org.sopt.and.utils.AuthKey.DEFAULT_NAME
 
 @Composable
 fun MyRoute(
@@ -32,10 +31,10 @@ fun MyRoute(
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("token", Context.MODE_PRIVATE)
     val token = sharedPreferences.getString("loginToken", "").orEmpty()
-    val myState by viewModel.myState.collectAsState()
+    val myState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getUserHobby(token = token)
+        viewModel.setEvent(MyContract.MyEvent.GetUserHobby(token = token))
     }
 
     MyScreen(state = myState)
@@ -43,7 +42,7 @@ fun MyRoute(
 
 @Composable
 fun MyScreen(
-    state: MyState,
+    state: MyContract.MyUiState,
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -56,13 +55,7 @@ fun MyScreen(
         ) {
             Column {
                 ProfileBox(
-                    userEmail =
-                    when (state) {
-                        is MyState.Success -> state.result.hobby
-                        else -> {
-                            DEFAULT_NAME
-                        }
-                    },
+                    userEmail = state.hobby,
                     modifier = Modifier
                 )
                 Spacer(modifier = Modifier.height(1.dp))
