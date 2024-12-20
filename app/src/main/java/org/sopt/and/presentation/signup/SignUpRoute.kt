@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -70,10 +69,8 @@ fun SignUpRoute(
     val hobby by viewModel.hobby.observeAsState("")
     val showPassword = remember { mutableStateOf(false) }
     val showDialog by viewModel.showDialog.observeAsState(false)
-    val signUpState by viewModel.signUpState.collectAsState()
 
     SignUpScreen(
-        state = signUpState,
         userName = userName,
         password = password,
         hobby = hobby,
@@ -115,7 +112,6 @@ fun SignUpRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    state: SignUpState,
     userName: String,
     password: String,
     hobby: String,
