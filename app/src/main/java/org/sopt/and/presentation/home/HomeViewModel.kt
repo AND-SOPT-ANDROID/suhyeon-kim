@@ -3,7 +3,7 @@ package org.sopt.and.presentation.home
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.sopt.and.R
-import org.sopt.and.data.local.TodayTopData
+import org.sopt.and.domain.model.TodayTopData
 import org.sopt.and.domain.type.HomeTabType
 import javax.inject.Inject
 

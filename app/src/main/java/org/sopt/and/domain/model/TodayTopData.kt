@@ -1,4 +1,4 @@
-package org.sopt.and.data.local
+package org.sopt.and.domain.model
 
 data class TodayTopData(
     val painterId: Int,

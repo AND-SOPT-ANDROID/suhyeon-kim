@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.sopt.and.R
-import org.sopt.and.data.local.TodayTopData
+import org.sopt.and.domain.model.TodayTopData
 import org.sopt.and.domain.type.HomeTabType
 import org.sopt.and.presentation.core.component.Banner
 import org.sopt.and.presentation.core.component.EditorRecommendBox
